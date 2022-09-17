@@ -15,6 +15,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: true
       - name: Install ARM compiler
         run: sudo apt-get install g++-10-multilib-arm-linux-gnueabihf
       - name: Add rustup ARM target
