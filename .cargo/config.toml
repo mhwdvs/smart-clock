@@ -1,6 +1,6 @@
 [build]
 target = "armv7-unknown-linux-gnueabihf"
-rustflags = ["-C", "linker=arm-linux-gnueabihf-gcc-10"]
+rustflags = ["-C", "linker=arm-linux-gnueabihf-g++-10"]
 
 [target.armv7-unknown-linux-gnueabihf]
-linker = "arm-linux-gnueabihf-gcc-10"
+linker = "arm-linux-gnueabihf-g++-10"
