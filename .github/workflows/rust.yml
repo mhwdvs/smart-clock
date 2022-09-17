@@ -16,6 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install ARM compiler
-        run: apt-get install g++-10-multilib-arm-linux-gnueabihf
+        run: sudo apt-get install g++-10-multilib-arm-linux-gnueabihf
       - name: Build
         run: cargo build --verbose
