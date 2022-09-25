@@ -1,0 +1,29 @@
+---
+- hosts: main
+  tasks:
+    - name: Install dependencies
+      apt:
+        name:
+          - git
+          - raspberrypi-kernel-headers
+          - build-essential
+          - bc
+          - dkms
+        state: present
+    - name: Clone wireless driver
+      git:
+        repo: https://github.com/morrownr/8821cu-20210118
+        dest: /root/8821cu-20210118
+    - name: Configure wireless driver for raspberry pi
+      command:
+        cmd: ./ARM_RPI.sh
+        chdir: /root/8821cu-20210118
+    - name: Install wireless driver
+        cmd: ./install-driver.sh
+        chdir: /root/8821cu-20210118
+        stdin: |
+          n
+          n
+    - name: Reboot raspberry pi to apply configuration
+      reboot:
+        reboot_timeout: 3600

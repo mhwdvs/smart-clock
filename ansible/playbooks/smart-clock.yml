@@ -1,0 +1,12 @@
+---
+- hosts: main
+  tasks:
+    - name: Install git
+      apt:
+        name:
+          - git
+        state: present
+    - name: Clone smart-clock
+      git:
+        repo: https://github.com/mhwdvs/smart-clock
+        dest: /opt/smart-clock
