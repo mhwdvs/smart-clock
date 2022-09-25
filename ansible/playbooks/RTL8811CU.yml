@@ -1,5 +1,5 @@
 ---
-- hosts: main
+- hosts: smart-clock
   tasks:
     - name: Install dependencies
       apt:
@@ -19,11 +19,16 @@
         cmd: ./ARM_RPI.sh
         chdir: /root/8821cu-20210118
     - name: Install wireless driver
-        cmd: ./install-driver.sh
+      command:
+        cmd: ./install-driver-no-dkms.sh
         chdir: /root/8821cu-20210118
         stdin: |
           n
           n
-    - name: Reboot raspberry pi to apply configuration
-      reboot:
-        reboot_timeout: 3600
+    - name: Reboot
+      shell: reboot
+      async: 10
+      poll: 0
+    - name: Wait for reboot
+      wait_for_connection:
+        delay: 10
