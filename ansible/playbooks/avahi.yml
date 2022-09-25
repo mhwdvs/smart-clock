@@ -1,0 +1,10 @@
+---
+# Allows hostname to be resolved on local network
+- hosts: smart-clock
+- tasks:
+    - name: Install Avahi
+      apt:
+        name: avahi-daemon
+        state: present
+    - name: Start daemon at boot
+      command: sudo update-rc.d avahi-daemon defaults
