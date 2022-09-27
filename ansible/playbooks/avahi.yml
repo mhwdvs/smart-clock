@@ -1,7 +1,7 @@
 ---
 # Allows hostname to be resolved on local network
 - hosts: smart-clock
-- tasks:
+  tasks:
     - name: Install Avahi
       apt:
         name: avahi-daemon

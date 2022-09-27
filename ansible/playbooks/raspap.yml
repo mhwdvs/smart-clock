@@ -1,6 +1,10 @@
 ---
 - hosts: smart-clock
-- tasks:
+  tasks:
+    - name: Install lighttpd
+      apt:
+        name: lighttpd
+        state: present
     - name: Install RaspAP
       command: curl -sL https://install.raspap.com | bash -s -- --yes --openvpn 0 --adblock 0 --cert
     - name: Reboot

@@ -1,0 +1,8 @@
+---
+- hosts: smart-clock
+  tasks:
+    - name: Install dependencies to speed up ansible
+      apt:
+        name:
+          - openssh-sftp-server
+        state: present
