@@ -1,2 +1,4 @@
 ---
-- import_playbook: playbooks/smart-clock.yml
+- import_playbook: playbooks/avahi.yml
+- import_playbook: playbooks/RTL8811CU.yml
+- import_playbook: playbooks/raspap.yml
