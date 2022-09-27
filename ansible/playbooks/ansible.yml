@@ -5,4 +5,5 @@
       apt:
         name:
           - openssh-sftp-server
+          - net-tools
         state: present
