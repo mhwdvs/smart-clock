@@ -44,4 +44,5 @@ Built with Ubuntu 20.04 LTS. Building on other platforms will require modificati
   - May be available in your package manager (eg. `sudo apt-get install g++-10-multilib-arm-linux-gnueabihf`)
   - Should be a C++ compiler (to build dependencies)
 - Build
-  - `cargo build`
+  - For development: `cargo build`
+  - For deployment (cross-compilation): `cargo build --target=armv7-unknown-linux-gnueabihf`
