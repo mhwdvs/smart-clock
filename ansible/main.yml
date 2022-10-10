@@ -2,4 +2,4 @@
 - import_playbook: "playbooks/ansible.yml"
 - import_playbook: "playbooks/avahi.yml"
 - import_playbook: "playbooks/RTL8811CU.yml"
-- import_playbook: "playbooks/raspap.yml"
+- import_playbook: "playbooks/raspap/raspap.yml"

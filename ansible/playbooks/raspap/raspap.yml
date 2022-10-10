@@ -1,0 +1,34 @@
+---
+- hosts: smart-clock
+  tasks:
+    - name: Install dependencies
+      apt:
+        name:
+          - lighttpd
+          - lighttpd-mod-openssl
+          - git
+        state: present
+    - name: Clone RaspAP
+      git:
+        repo: https://github.com/RaspAP/raspap-webgui
+        version: 4c23b453757cdfa665dc39a91e763e9e9b0fec06
+        dest: /root/raspap-webgui
+    - name: Copy main config
+      copy:
+        src: config.php
+        dest: /root/raspap-webgui/config/config.php
+        force: yes
+    - name: Copy network config
+      copy:
+        src: defaults.json
+        dest: /root/raspap-webgui/config/defaults.json
+        force: yes
+    - name: Install RaspAP
+      shell: ./installers/raspian.sh --yes --cert
+    - name: Reboot
+      shell: reboot
+      async: 10
+      poll: 0
+    - name: Wait for reboot
+      wait_for_connection:
+        delay: 10
