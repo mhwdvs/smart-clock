@@ -13,6 +13,7 @@
     - name: Clone wireless driver
       git:
         repo: https://github.com/morrownr/8821cu-20210118
+        version: 4dfe0bcc6160e2c8ec534e9a2da224c7b043fbe3
         dest: /root/8821cu-20210118
     - name: Configure wireless driver for raspberry pi
       command:
@@ -20,7 +21,7 @@
         chdir: /root/8821cu-20210118
     - name: Install wireless driver
       command:
-        cmd: ./install-driver-no-dkms.sh
+        cmd: ./install-driver.sh
         chdir: /root/8821cu-20210118
         stdin: |
           n
