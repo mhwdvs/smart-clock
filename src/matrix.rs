@@ -19,13 +19,16 @@ pub struct Matrix {
     rpi_led_matrix: LedMatrix,
     #[cfg(all(target_arch = "arm"))]
     rpi_led_canvas: LedCanvas,
+
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
     sim_display: SimulatorDisplay<Rgb888>,
+    #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
+    sim_window: Window,
 }
 
 impl Matrix {
     #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
-    pub fn new() -> Matrix {
+    pub fn new() -> Self {
         let mut options = LedMatrixOptions::new();
         _ = options.set_brightness(100);
         options.set_cols(64);
@@ -35,17 +38,26 @@ impl Matrix {
 
         let mut matrix = LedMatrix::new(Some(options), None).unwrap();
 
-        return Matrix {
+        Self {
             rpi_led_matrix: matrix,
             rpi_led_canvas: matrix.offscreen_canvas(),
         };
     }
 
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
-    pub fn new() -> Matrix {
-        return Matrix {
-            sim_display: SimulatorDisplay::new(Size::new(64, 32)),
-        };
+    pub fn new() -> Self {
+        let output_settings = OutputSettingsBuilder::new()
+            .theme(BinaryColorTheme::Default)
+            .build();
+
+        let sim_display = SimulatorDisplay::new(Size::new(64, 32));
+
+        let mut sim_window = Window::new("smart-clock", &output_settings);
+
+        Self {
+            sim_display,
+            sim_window,
+        }
     }
 
     #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
@@ -65,9 +77,6 @@ impl Matrix {
 
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
     pub fn swap_framebuffer(&mut self) {
-        let output_settings = OutputSettingsBuilder::new()
-            .theme(BinaryColorTheme::Default)
-            .build();
-        Window::new("smart-clock", &output_settings).show_static(&self.sim_display);
+        self.sim_window.update(&self.sim_display);
     }
 }
