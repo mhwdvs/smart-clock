@@ -7,7 +7,8 @@ edition = "2021"
 
 [dependencies]
 embedded-graphics = "0.7.1"
-rppal = "0.13.1"
+embedded-graphics-simulator = "0.4.0"
 
 [target.'cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))'.dependencies]
 rpi-led-matrix = "0.4.0"
+rppal = "0.13.1"

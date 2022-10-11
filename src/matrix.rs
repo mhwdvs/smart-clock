@@ -3,6 +3,11 @@ use embedded_graphics::{
     mock_display::MockDisplay, pixelcolor::Rgb888, prelude::*, primitives::Rectangle,
 };
 
+#[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
+use embedded_graphics_simulator::{
+    BinaryColorTheme, OutputSettingsBuilder, SimulatorDisplay, Window,
+};
+
 #[cfg(all(target_arch = "arm"))]
 use {
     crate::rpi_matrix,
@@ -14,6 +19,8 @@ pub struct Matrix {
     rpi_led_matrix: LedMatrix,
     #[cfg(all(target_arch = "arm"))]
     rpi_led_canvas: LedCanvas,
+    #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
+    sim_display: SimulatorDisplay<Rgb888>,
 }
 
 impl Matrix {
@@ -36,7 +43,9 @@ impl Matrix {
 
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
     pub fn new() -> Matrix {
-        return Matrix {};
+        return Matrix {
+            sim_display: SimulatorDisplay::new(Size::new(64, 32)),
+        };
     }
 
     #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
@@ -45,9 +54,8 @@ impl Matrix {
     }
 
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
-    pub fn get_canvas(&self) -> MockDisplay<Rgb888> {
-        let rect = Rectangle::new(Point::new(0, 0), Size::new(64, 32));
-        return MockDisplay::from_points(rect.points(), Rgb888::new(0, 0, 0));
+    pub fn get_canvas(&mut self) -> &mut SimulatorDisplay<Rgb888> {
+        return &mut self.sim_display;
     }
 
     #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
@@ -56,5 +64,10 @@ impl Matrix {
     }
 
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
-    pub fn swap_framebuffer(&self) {}
+    pub fn swap_framebuffer(&mut self) {
+        let output_settings = OutputSettingsBuilder::new()
+            .theme(BinaryColorTheme::Default)
+            .build();
+        Window::new("smart-clock", &output_settings).show_static(&self.sim_display);
+    }
 }
