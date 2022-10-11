@@ -5,8 +5,17 @@
       apt:
         name:
           - git
+          - g++
+          - make
         state: present
+    - name: Install rust
+      shell:
+        cmd: curl https://sh.rustup.rs -sSf | sh -s -- -y
     - name: Clone smart-clock
       git:
         repo: https://github.com/mhwdvs/smart-clock
-        dest: /opt/smart-clock
+        dest: /root/smart-clock
+    - name: Build smart-clock software
+      shell:
+        cmd: cargo build
+        chdir: /root/smart-clock
