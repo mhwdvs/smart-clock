@@ -33,11 +33,12 @@ impl Matrix {
         options.set_hardware_mapping("adafruit-hat-pwm");
         options.set_limit_refresh(30);
 
-        let mut matrix = LedMatrix::new(Some(options), None).unwrap();
+        let matrix = LedMatrix::new(Some(options), None).unwrap();
+        let canvas = matrix.offscreen_canvas();
 
         Self {
             rpi_led_matrix: matrix,
-            rpi_led_canvas: matrix.offscreen_canvas(),
+            rpi_led_canvas: canvas,
         }
     }
 
@@ -59,7 +60,7 @@ impl Matrix {
 
     #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
     pub fn get_canvas(&self) -> &mut LedCanvas {
-        return &mut self.rpi_led_matrix.offscreen_canvas();
+        return &mut self.rpi_led_canvas;
     }
 
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
