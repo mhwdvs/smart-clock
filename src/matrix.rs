@@ -11,7 +11,7 @@ use embedded_graphics_simulator::{
 #[cfg(all(target_arch = "arm"))]
 use rpi_led_matrix::{LedCanvas, LedMatrix, LedMatrixOptions};
 
-use std::mem::take;
+use std::mem::swap;
 
 pub struct Matrix {
     #[cfg(all(target_arch = "arm"))]
@@ -83,7 +83,9 @@ impl Matrix {
 
     #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
     pub fn post_draw(&mut self) {
-        self.rpi_led_canvas = self.rpi_led_matrix.swap(take(&mut self.rpi_led_canvas));
+        let c = rpi_led_matrix.offscreen_canvas();
+        swap(&mut self.rpi_led_canvas, &mut c);
+        self.rpi_led_canvas = self.rpi_led_matrix.swap(c);
     }
 
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
