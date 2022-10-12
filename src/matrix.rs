@@ -38,7 +38,7 @@ impl Matrix {
         Self {
             rpi_led_matrix: matrix,
             rpi_led_canvas: matrix.offscreen_canvas(),
-        };
+        }
     }
 
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
@@ -49,7 +49,7 @@ impl Matrix {
 
         let sim_display = SimulatorDisplay::new(Size::new(64, 32));
 
-        let mut sim_window = Window::new("smart-clock", &output_settings);
+        let sim_window = Window::new("smart-clock", &output_settings);
 
         Self {
             sim_display,
@@ -69,7 +69,7 @@ impl Matrix {
 
     #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
     pub fn swap_framebuffer(&mut self) {
-        self.rpi_led_canvas.swap();
+        self.rpi_led_matrix.swap();
     }
 
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
