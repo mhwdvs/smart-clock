@@ -68,12 +68,23 @@ impl Matrix {
     }
 
     #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
-    pub fn swap_framebuffer(&mut self) {
+    pub fn pre_draw(&mut self) {
+        // crate::rpi_led_matrix shadows DrawTarget clear() implementation
+        _ = self.rpi_led_canvas.clear();
+    }
+
+    #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
+    pub fn pre_draw(&mut self) {
+        _ = self.sim_display.clear(Rgb888::BLACK);
+    }
+
+    #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
+    pub fn post_draw(&mut self) {
         self.rpi_led_canvas = self.rpi_led_matrix.swap(self.rpi_led_canvas);
     }
 
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
-    pub fn swap_framebuffer(&mut self) {
+    pub fn post_draw(&mut self) {
         self.sim_window.update(&self.sim_display);
     }
 }

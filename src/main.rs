@@ -25,7 +25,7 @@ pub fn main() {
     let mut myint = 1;
 
     loop {
-        _ = matrix.get_canvas().clear(Rgb888::BLACK);
+        matrix.pre_draw();
 
         _ = Text::with_alignment(
             myint.to_string().as_str(),
@@ -37,7 +37,6 @@ pub fn main() {
 
         myint += 1;
 
-        // swap frame buffer
-        matrix.swap_framebuffer();
+        matrix.post_draw();
     }
 }
