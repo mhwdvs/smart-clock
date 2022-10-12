@@ -58,8 +58,8 @@ impl Matrix {
     }
 
     #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
-    pub fn get_canvas(&self) -> LedCanvas {
-        return rpi_led_matrix.offscreen_canvas();
+    pub fn get_canvas(&self) -> &mut LedCanvas {
+        return &mut self.rpi_led_matrix.offscreen_canvas();
     }
 
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
@@ -68,8 +68,8 @@ impl Matrix {
     }
 
     #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
-    pub fn swap_framebuffer(&self) {
-        rpi_led_canvas.swap();
+    pub fn swap_framebuffer(&mut self) {
+        self.rpi_led_canvas.swap();
     }
 
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
