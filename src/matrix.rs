@@ -37,10 +37,10 @@ impl Matrix {
         matrix_options.set_limit_refresh(0);
 
         let mut runtime_options = LedRuntimeOptions::new();
-        runtime_options.set_daemon(true);
+        //runtime_options.set_daemon(true);
 
         let matrix = LedMatrix::new(Some(matrix_options), Some(runtime_options)).unwrap();
-        let canvas = matrix.offscreen_canvas();
+        let canvas = matrix.canvas();
 
         Self {
             rpi_led_matrix: matrix,
@@ -87,9 +87,9 @@ impl Matrix {
 
     #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
     pub fn post_draw(&mut self) {
-        let mut c = self.rpi_led_matrix.offscreen_canvas();
-        swap(&mut self.rpi_led_canvas, &mut c);
-        self.rpi_led_canvas = self.rpi_led_matrix.swap(c);
+        //let mut c = self.rpi_led_matrix.offscreen_canvas();
+        //swap(&mut self.rpi_led_canvas, &mut c);
+        //self.rpi_led_canvas = self.rpi_led_matrix.swap(c);
     }
 
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
