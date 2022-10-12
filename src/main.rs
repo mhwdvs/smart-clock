@@ -37,6 +37,6 @@ pub fn main() {
 
         myint += 1;
 
-        matrix.post_draw();
+        matrix = matrix.post_draw();
     }
 }

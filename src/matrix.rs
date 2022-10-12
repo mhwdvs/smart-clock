@@ -1,11 +1,9 @@
 #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
-use embedded_graphics::{
-    mock_display::MockDisplay, pixelcolor::Rgb888, prelude::*, primitives::Rectangle,
-};
+use embedded_graphics::{pixelcolor::Rgb888, prelude::*, primitives::Rectangle};
 
 #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
 use embedded_graphics_simulator::{
-    BinaryColorTheme, OutputSettingsBuilder, SimulatorDisplay, Window,
+    BinaryColorTheme, OutputSettings, OutputSettingsBuilder, SimulatorDisplay, Window,
 };
 
 #[cfg(all(target_arch = "arm"))]
@@ -51,11 +49,9 @@ impl Matrix {
 
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
     pub fn new() -> Self {
-        let output_settings = OutputSettingsBuilder::new()
-            .theme(BinaryColorTheme::Default)
-            .build();
+        let output_settings = OutputSettingsBuilder::new().scale(10).build();
 
-        let sim_display = SimulatorDisplay::new(Size::new(64, 32));
+        let sim_display: SimulatorDisplay<Rgb888> = SimulatorDisplay::new(Size::new(64, 32));
 
         let sim_window = Window::new("smart-clock", &output_settings);
 
@@ -87,14 +83,14 @@ impl Matrix {
     }
 
     #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
-    pub fn post_draw(&mut self) {
-        let mut c = self.rpi_led_matrix.offscreen_canvas();
-        swap(&mut self.rpi_led_canvas, &mut c);
-        self.rpi_led_canvas = self.rpi_led_matrix.swap(c);
+    pub fn post_draw(mut self) -> Self {
+        self.rpi_led_canvas = self.rpi_led_matrix.swap(self.rpi_led_canvas);
+        return self;
     }
 
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
-    pub fn post_draw(&mut self) {
+    pub fn post_draw(mut self) -> Self {
         self.sim_window.update(&self.sim_display);
+        return self;
     }
 }
