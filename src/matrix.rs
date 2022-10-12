@@ -9,10 +9,7 @@ use embedded_graphics_simulator::{
 };
 
 #[cfg(all(target_arch = "arm"))]
-use {
-    crate::rpi_matrix,
-    rpi_led_matrix::{LedCanvas, LedMatrix},
-};
+use rpi_led_matrix::{LedCanvas, LedMatrix, LedMatrixOptions};
 
 pub struct Matrix {
     #[cfg(all(target_arch = "arm"))]
