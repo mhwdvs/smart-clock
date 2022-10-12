@@ -87,7 +87,7 @@ impl Matrix {
 
     #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
     pub fn post_draw(&mut self) {
-        let mut c = rpi_led_matrix.offscreen_canvas();
+        let mut c = self.rpi_led_matrix.offscreen_canvas();
         swap(&mut self.rpi_led_canvas, &mut c);
         self.rpi_led_canvas = self.rpi_led_matrix.swap(c);
     }
