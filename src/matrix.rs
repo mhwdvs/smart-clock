@@ -59,7 +59,7 @@ impl Matrix {
     }
 
     #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
-    pub fn get_canvas(&self) -> &mut LedCanvas {
+    pub fn get_canvas(&mut self) -> &mut LedCanvas {
         return &mut self.rpi_led_canvas;
     }
 
