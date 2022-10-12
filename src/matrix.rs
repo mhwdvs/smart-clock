@@ -69,7 +69,7 @@ impl Matrix {
 
     #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
     pub fn swap_framebuffer(&mut self) {
-        self.rpi_led_matrix.swap();
+        self.rpi_led_canvas = self.rpi_led_matrix.swap(self.rpi_led_canvas);
     }
 
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
