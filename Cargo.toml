@@ -6,8 +6,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+chrono = "0.4.22"
+chrono-tz = "0.6.3"
 embedded-graphics = "0.7.1"
 embedded-graphics-simulator = "0.4.0"
+openweathermap = "0.2.4"
 
 [target.'cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))'.dependencies]
 rpi-led-matrix = "0.4.0"
