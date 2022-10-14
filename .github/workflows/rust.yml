@@ -10,12 +10,12 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-    runs-on: ubuntu-20.04
-
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
-      - name: Build
-        run: cargo build --verbose
+#  build:
+#    runs-on: ubuntu-20.04
+#
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          submodules: true
+#      - name: Build
+#        run: cargo build --verbose
