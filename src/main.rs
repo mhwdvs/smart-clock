@@ -16,12 +16,15 @@ pub fn main() {
     let mut current_state = State::RegionSelect;
     let mut frame_count: u32 = 0;
 
+    // measure brightness on seperate thread
     std::thread::spawn(move || loop {
-        BH1750::get_light();
+        BH1750::measure_brightness();
     });
 
     loop {
         matrix.pre_draw();
+
+        let brightness = BH1750::get_brightness();
 
         current_state = match current_state {
             State::RegionSelect => region_select_state(&mut matrix),
@@ -29,5 +32,7 @@ pub fn main() {
         };
 
         matrix = matrix.post_draw();
+
+        println!("{}", brightness);
     }
 }
