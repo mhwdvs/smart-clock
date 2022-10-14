@@ -1,0 +1,8 @@
+---
+- hosts: smart-clock
+  tasks:
+    - name: Enable i2c
+      repalce:
+        path: /boot/config.txt
+        regexp: "#dtparam=i2c_arm=off"
+        replace: "dtparam=i2c_arm=on"

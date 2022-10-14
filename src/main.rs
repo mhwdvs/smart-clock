@@ -1,3 +1,4 @@
+mod inputs;
 mod matrix;
 mod state;
 mod states;
