@@ -21,10 +21,16 @@ pub fn main() {
         BH1750::measure_brightness();
     });
 
+    let mut brightness_update = 0;
     loop {
-        let brightness = BH1750::get_brightness();
-        println!("{}", brightness);
-        matrix.set_brightness(brightness);
+        if (brightness_update == 10) {
+            let brightness = BH1750::get_brightness();
+            println!("{}", brightness);
+            matrix = matrix.set_brightness(brightness);
+            brightness_update = 0;
+        } else {
+            brightness_update += 1;
+        }
 
         matrix.pre_draw();
 

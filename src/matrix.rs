@@ -42,6 +42,7 @@ impl Matrix {
         let mut runtime_options = LedRuntimeOptions::new();
         //runtime_options.set_daemon(true);
         runtime_options.set_gpio_slowdown(2);
+        runtime_options.set_drop_privileges(false);
 
         let matrix = LedMatrix::new(Some(matrix_options), Some(runtime_options)).unwrap();
         let canvas = matrix.offscreen_canvas();
