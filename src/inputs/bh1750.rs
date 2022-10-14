@@ -1,5 +1,5 @@
 use crate::inputs::InputError;
-use rppal::i2c::I2C;
+use rppal::i2c::I2c;
 
 static BH1750_ADDR: u8 = 0x23;
 
@@ -17,7 +17,7 @@ pub struct BH1750 {}
 
 impl BH1750 {
     pub fn test_light_conn() -> Result<(), InputError> {
-        let mut channel = I2C::new()?;
+        let mut channel = I2c::new()?;
         channel.set_slave_address(BH1750_ADDR);
         channel.with_bus(1);
         //channel.smbus_read_byte();
@@ -26,7 +26,7 @@ impl BH1750 {
     }
 
     pub fn get_light() -> Result<(), InputError> {
-        let mut channel = I2C::new()?;
+        let mut channel = I2c::new()?;
         channel.set_slave_address(BH1750_ADDR);
         channel.with_bus(1);
 

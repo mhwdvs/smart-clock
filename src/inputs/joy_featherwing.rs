@@ -1,5 +1,5 @@
 use crate::inputs::InputError;
-use rppal::i2c::I2C;
+use rppal::i2c::I2c;
 
 static JOY_FEATHERWING_ADDR: u8 = 0x49;
 
