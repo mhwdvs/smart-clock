@@ -33,10 +33,11 @@ impl Matrix {
         matrix_options.set_rows(32);
         matrix_options.set_hardware_mapping("adafruit-hat-pwm");
         matrix_options.set_limit_refresh(0);
+        matrix_options.set_led_rgb_sequence("rbg");
 
         let mut runtime_options = LedRuntimeOptions::new();
         //runtime_options.set_daemon(true);
-        runtime_options.set_gpio_slowdown(3);
+        runtime_options.set_gpio_slowdown(2);
 
         let matrix = LedMatrix::new(Some(matrix_options), Some(runtime_options)).unwrap();
         let canvas = matrix.offscreen_canvas();
