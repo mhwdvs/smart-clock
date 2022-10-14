@@ -1,32 +1,16 @@
-use std::{
-    env::{current_exe, VarError},
-    num::{IntErrorKind, ParseIntError},
-    sync::atomic::AtomicUsize,
-    thread::current,
-};
+use std::{num::IntErrorKind, sync::atomic::AtomicUsize};
 
 use embedded_graphics::{
-    draw_target::DrawTarget,
-    geometry::Point,
-    mono_font::ascii::*,
-    mono_font::*,
-    pixelcolor::Rgb888,
-    prelude::{Dimensions, RgbColor},
-    text::Alignment,
-    text::Baseline,
-    text::Text,
-    Drawable,
+    geometry::Point, mono_font::ascii::*, mono_font::*, pixelcolor::Rgb888, text::Alignment,
+    text::Text, Drawable,
 };
 
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::Ordering;
 
-use chrono_tz::Tz;
 use chrono_tz::TZ_VARIANTS;
-use std::sync::Mutex;
 
 use crate::Matrix;
 use crate::State;
-use crate::State::*;
 
 static TIMEZONE_INDEX: AtomicUsize = AtomicUsize::new(0);
 static FRAME_COUNT: AtomicUsize = AtomicUsize::new(0);
@@ -96,22 +80,74 @@ const fn get_row_point(row_num: i32, row_type: &RowType) -> Result<Point, IntErr
 
 pub fn region_select_state(matrix: &mut Matrix) -> State {
     use RowType::*;
+    use State::*;
 
     let current_framecount = FRAME_COUNT.load(Ordering::Acquire);
+    let current_timezone_index = TIMEZONE_INDEX.load(Ordering::Acquire);
 
     _ = draw_menu_option(matrix, "Region:", 0, &HEADING);
 
-    _ = draw_menu_option(matrix, "Australia/Perth", 1, &REGULAR);
-
-    _ = draw_menu_option(matrix, "Australia/Sydney", 2, &SELECTED);
-
-    _ = draw_menu_option(matrix, "Australia/Melbourne", 3, &REGULAR);
-
-    //for varient in TZ_VARIANTS {
-    //    let name = varient.name();
-    //}
+    if current_timezone_index == 0 {
+        _ = draw_menu_option(
+            matrix,
+            TZ_VARIANTS[current_timezone_index].name(),
+            1,
+            &SELECTED,
+        );
+        _ = draw_menu_option(
+            matrix,
+            TZ_VARIANTS[current_timezone_index + 1].name(),
+            2,
+            &REGULAR,
+        );
+        _ = draw_menu_option(
+            matrix,
+            TZ_VARIANTS[current_timezone_index + 2].name(),
+            3,
+            &REGULAR,
+        );
+    } else if current_timezone_index == TZ_VARIANTS.len() - 1 {
+        _ = draw_menu_option(
+            matrix,
+            TZ_VARIANTS[current_timezone_index - 3].name(),
+            1,
+            &REGULAR,
+        );
+        _ = draw_menu_option(
+            matrix,
+            TZ_VARIANTS[current_timezone_index - 2].name(),
+            2,
+            &REGULAR,
+        );
+        _ = draw_menu_option(
+            matrix,
+            TZ_VARIANTS[current_timezone_index - 1].name(),
+            3,
+            &SELECTED,
+        );
+    } else {
+        _ = draw_menu_option(
+            matrix,
+            TZ_VARIANTS[current_timezone_index - 1].name(),
+            1,
+            &REGULAR,
+        );
+        _ = draw_menu_option(
+            matrix,
+            TZ_VARIANTS[current_timezone_index].name(),
+            2,
+            &SELECTED,
+        );
+        _ = draw_menu_option(
+            matrix,
+            TZ_VARIANTS[current_timezone_index + 1].name(),
+            3,
+            &REGULAR,
+        );
+    }
 
     FRAME_COUNT.store(current_framecount + 1, Ordering::Release);
+    TIMEZONE_INDEX.store(current_timezone_index, Ordering::Release);
 
     return RegionSelect;
 }
