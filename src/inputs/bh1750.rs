@@ -4,13 +4,13 @@ use rppal::i2c::I2c;
 static BH1750_ADDR: u16 = 0x23;
 
 // instruction set: https://www.mouser.com/datasheet/2/348/bh1750fvi-e-186247.pdf
-enum Command {
-    PowerOff = 0x0,
-    PowerOn = 0x1,
-    ResetMeasurement = 0x7,
-    QualityHigh = 0x20,
-    QualityHigh2 = 0x21,
-    QualityLow = 0x23,
+mod Command {
+    pub static PowerOff: u8 = 0x0;
+    pub static PowerOn: u8 = 0x1;
+    pub static ResetMeasurement: u8 = 0x7;
+    pub static QualityHigh: u8 = 0x20;
+    pub static QualityHigh2: u8 = 0x21;
+    pub static QualityLow: u8 = 0x23;
 }
 
 pub struct BH1750 {}
@@ -28,9 +28,12 @@ impl BH1750 {
         let mut channel = I2c::new().unwrap();
         channel.set_slave_address(BH1750_ADDR);
 
-        channel.write(&[Command::PowerOn]).unwrap();
+        channel.write(&[Command::PowerOn as u8]).unwrap();
+        std::thread::sleep(std::time::Duration::from_millis(100));
         channel.write(&[Command::QualityLow]).unwrap();
+        std::thread::sleep(std::time::Duration::from_millis(100));
         channel.write(&[Command::ResetMeasurement]).unwrap();
+        std::thread::sleep(std::time::Duration::from_millis(100));
 
         let mut buf: [u8; 2] = [0x0, 0x0];
         let result = channel.read(&mut buf).unwrap();
