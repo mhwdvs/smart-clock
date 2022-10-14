@@ -10,7 +10,7 @@ use states::region_select::region_select_state;
 use states::time::time_state;
 
 pub fn main() {
-    let mut matrix = Matrix::new();
+    let mut matrix = Matrix::new(None);
 
     // initial state = RegionSelect
     let mut current_state = State::RegionSelect;
@@ -22,9 +22,11 @@ pub fn main() {
     });
 
     loop {
-        matrix.pre_draw();
-
         let brightness = BH1750::get_brightness();
+        println!("{}", brightness);
+        matrix.set_brightness(brightness);
+
+        matrix.pre_draw();
 
         current_state = match current_state {
             State::RegionSelect => region_select_state(&mut matrix),
@@ -32,7 +34,5 @@ pub fn main() {
         };
 
         matrix = matrix.post_draw();
-
-        println!("{}", brightness);
     }
 }

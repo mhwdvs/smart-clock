@@ -26,9 +26,12 @@ pub struct Matrix {
 
 impl Matrix {
     #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
-    pub fn new() -> Self {
+    pub fn new(brightness: Option<u8>) -> Self {
         let mut matrix_options = LedMatrixOptions::new();
-        _ = matrix_options.set_brightness(100);
+        _ = match brightness {
+            Some(x) => matrix_options.set_brightness(x),
+            None => matrix_options.set_brightness(100),
+        };
         matrix_options.set_cols(64);
         matrix_options.set_rows(32);
         matrix_options.set_hardware_mapping("adafruit-hat-pwm");
@@ -50,7 +53,7 @@ impl Matrix {
     }
 
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
-    pub fn new() -> Self {
+    pub fn new(brightness: Option<u8>) -> Self {
         let output_settings = OutputSettingsBuilder::new().scale(10).build();
 
         let sim_display: SimulatorDisplay<Rgb888> = SimulatorDisplay::new(Size::new(64, 32));
@@ -94,5 +97,11 @@ impl Matrix {
     pub fn post_draw(mut self) -> Self {
         self.sim_window.update(&self.sim_display);
         return self;
+    }
+
+    pub fn set_brightness(self, brightness: u8) -> Self {
+        let clamped_brightness = num::clamp(brightness, 1, 100);
+
+        Matrix::new(Some(clamped_brightness))
     }
 }
