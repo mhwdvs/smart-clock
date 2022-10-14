@@ -28,6 +28,10 @@ impl BH1750 {
         let mut channel = I2c::new().unwrap();
         channel.set_slave_address(BH1750_ADDR);
 
+        channel.write(&[Command::PowerOn]).unwrap();
+        channel.write(&[Command::QualityLow]).unwrap();
+        channel.write(&[Command::ResetMeasurement]).unwrap();
+
         let mut buf: [u8; 2] = [0x0, 0x0];
         let result = channel.read(&mut buf).unwrap();
         if result != 2 {
