@@ -34,6 +34,7 @@ impl Matrix {
         matrix_options.set_hardware_mapping("adafruit-hat-pwm");
         matrix_options.set_limit_refresh(0);
         matrix_options.set_led_rgb_sequence("rbg");
+        matrix_options.set_refresh_rate(false);
 
         let mut runtime_options = LedRuntimeOptions::new();
         //runtime_options.set_daemon(true);
