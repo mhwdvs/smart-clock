@@ -3,6 +3,7 @@ mod matrix;
 mod state;
 mod states;
 
+use inputs::bh1750::BH1750;
 use matrix::Matrix;
 use state::State;
 use states::region_select::region_select_state;
@@ -14,6 +15,10 @@ pub fn main() {
     // initial state = RegionSelect
     let mut current_state = State::RegionSelect;
     let mut frame_count: u32 = 0;
+
+    std::thread::spawn(move || loop {
+        BH1750::get_light();
+    });
 
     loop {
         matrix.pre_draw();

@@ -1,5 +1,5 @@
-mod bh1750;
-mod joy_featherwing;
+pub mod bh1750;
+pub mod joy_featherwing;
 
 pub static DELAY_NS: usize = 100;
 
