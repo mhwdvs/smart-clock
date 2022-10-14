@@ -1,7 +1,7 @@
 use crate::inputs::InputError;
 use rppal::i2c::I2c;
 
-static BH1750_ADDR: u8 = 0x23;
+static BH1750_ADDR: u16 = 0x23;
 
 // instruction set: https://www.mouser.com/datasheet/2/348/bh1750fvi-e-186247.pdf
 enum Command {
@@ -17,8 +17,7 @@ pub struct BH1750 {}
 
 impl BH1750 {
     pub fn test_light_conn() -> Result<(), InputError> {
-        I2c.with_bus(1);
-        let mut channel = I2c::new()?;
+        let mut channel = I2c::new().unwrap();
         channel.set_slave_address(BH1750_ADDR);
         //channel.smbus_read_byte();
 
@@ -26,11 +25,10 @@ impl BH1750 {
     }
 
     pub fn get_light() -> Result<(), InputError> {
-        I2c.with_bus(1);
-        let mut channel = I2c::new()?;
+        let mut channel = I2c::new().unwrap();
         channel.set_slave_address(BH1750_ADDR);
 
-        let mut buf: [u8; 2];
+        let mut buf: [u8; 2] = [0x0, 0x0];
         let result = channel.read(&mut buf).unwrap();
         if result != 2 {
             return Err(InputError::LightReadErr);

@@ -2,7 +2,10 @@
 - hosts: smart-clock
   tasks:
     - name: Enable i2c
-      repalce:
+      replace:
         path: /boot/config.txt
         regexp: "#dtparam=i2c_arm=off"
         replace: "dtparam=i2c_arm=on"
+    - name: Add root to i2c group
+      shell:
+        cmd: usermod -a -G i2c root
