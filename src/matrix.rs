@@ -100,9 +100,8 @@ impl Matrix {
         return self;
     }
 
-    pub fn set_brightness(self, brightness: u8) -> Self {
+    pub fn set_brightness(self, brightness: u8) -> Matrix {
         let clamped_brightness = num::clamp(brightness, 1, 100);
-
         Matrix::new(Some(clamped_brightness))
     }
 }
