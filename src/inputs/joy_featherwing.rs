@@ -235,8 +235,7 @@ impl JoyFeatherwing {
         let res = JOY_BUTTON_PIN_BITMASK[0] & buf32;
 
         println!(
-            "Input:   {:#034b}\n
-             Bitmask: {:#034b}",
+            "Input:   {:#034b}\nBitmask: {:#034b}",
             res, JOY_BUTTON_PIN_BITMASK[0]
         );
 
