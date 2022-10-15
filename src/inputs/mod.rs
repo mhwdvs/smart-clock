@@ -11,12 +11,13 @@ pub enum InputError {
 }
 
 pub fn u32_to_u8s(input: u32) -> [u8; 4] {
-    return [
+    let res: [u8; 4] = [
         (input >> 24) as u8,
         (input >> 16) as u8,
         (input >> 8) as u8,
         input as u8,
     ];
+    return res;
 }
 
 pub fn u8s_to_u32(input: [u8; 4]) -> u32 {
