@@ -79,6 +79,7 @@ impl JoyFeatherwing {
             .write(&[
                 BaseRegister::STATUS as u8,
                 StatusFunctionRegister::SWRST as u8,
+                0xFF, // no idea what this is
             ])
             .unwrap();
 
