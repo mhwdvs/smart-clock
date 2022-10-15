@@ -118,7 +118,7 @@ impl JoyFeatherwing {
 
         // dirclr
         channel
-            .write({
+            .write(&{
                 let left = &[BaseRegister::GPIO as u8, GPIOFunctionRegister::DIRCLR as u8];
                 let right = &u32_to_u8s(JOY_BUTTON_PIN_BITMASK);
                 let whole: [u8; 6] = {
@@ -135,7 +135,7 @@ impl JoyFeatherwing {
 
         // pullenset
         channel
-            .write({
+            .write(&{
                 let left = &[
                     BaseRegister::GPIO as u8,
                     GPIOFunctionRegister::PULLENSET as u8,
@@ -154,7 +154,7 @@ impl JoyFeatherwing {
         sleep(Duration::from_millis(DELAY_MS));
 
         channel
-            .write({
+            .write(&{
                 let left = &[BaseRegister::GPIO as u8, GPIOFunctionRegister::SET as u8];
                 let right = &u32_to_u8s(JOY_BUTTON_PIN_BITMASK);
                 let whole: [u8; 6] = {
@@ -178,7 +178,7 @@ impl JoyFeatherwing {
 
         // intenset
         channel
-            .write({
+            .write(&{
                 let left = &[
                     BaseRegister::GPIO as u8,
                     GPIOFunctionRegister::INTENSET as u8,
@@ -221,7 +221,7 @@ impl JoyFeatherwing {
 
         // intenset
         channel
-            .write({
+            .write(&{
                 let left = &[BaseRegister::GPIO as u8, GPIOFunctionRegister::GPIO as u8];
                 let right = &u32_to_u8s(JOY_BUTTON_PIN_BITMASK);
                 let whole: [u8; 6] = {
