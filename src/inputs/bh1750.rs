@@ -9,13 +9,13 @@ use std::time::Duration;
 static BH1750_ADDR: u16 = 0x23;
 static MEASUREMENT_DELAY_MS: u64 = 150;
 
-mod Command {
-    pub static PowerOff: u8 = 0x0;
-    pub static PowerOn: u8 = 0x1;
-    pub static ResetMeasurement: u8 = 0x7;
-    pub static QualityHigh: u8 = 0x20;
-    pub static QualityHigh2: u8 = 0x21;
-    pub static QualityLow: u8 = 0x23;
+enum OpCode {
+    PowerOff = 0x0,
+    PowerOn = 0x1,
+    ResetMeasurement = 0x7,
+    QualityHigh = 0x20,
+    QualityHigh2 = 0x21,
+    QualityLow = 0x23,
 }
 
 static CURRENT_BRIGHTNESS: AtomicU8 = AtomicU8::new(0);
@@ -27,7 +27,7 @@ impl BH1750 {
         let mut channel = I2c::new().unwrap();
         channel.set_slave_address(BH1750_ADDR);
 
-        channel.write(&[Command::PowerOn as u8]).unwrap();
+        channel.write(&[OpCode::PowerOn as u8]).unwrap();
         sleep(Duration::from_millis(MEASUREMENT_DELAY_MS));
 
         Ok(())
@@ -37,7 +37,7 @@ impl BH1750 {
         let mut channel = I2c::new().unwrap();
         channel.set_slave_address(BH1750_ADDR);
 
-        channel.write(&[Command::QualityHigh2]).unwrap();
+        channel.write(&[OpCode::QualityHigh2]).unwrap();
         sleep(Duration::from_millis(MEASUREMENT_DELAY_MS));
 
         // blank, brightness reading
