@@ -22,11 +22,11 @@ static JOY_I2C_ADDR: u16 = 0x49;
 static DELAY_MS: u64 = 200;
 
 enum JoyInternalGPIOPins {
-    ButtonRight = 0x06,
-    ButtonDown = 0x07,
-    ButtonLeft = 0x09,
-    ButtonUp = 0x10,
-    ButtonSelect = 0x14,
+    ButtonRight = 6,
+    ButtonDown = 7,
+    ButtonLeft = 9,
+    ButtonUp = 10,
+    ButtonSelect = 14,
 }
 
 static JOY_BUTTON_PIN_BITMASK: [u32; 1] = [(1 << JoyInternalGPIOPins::ButtonRight as u8)
@@ -117,7 +117,7 @@ impl JoyFeatherwing {
         let mut channel = I2c::new().unwrap();
         channel.set_slave_address(JOY_I2C_ADDR);
 
-        // dirclr
+        // dirclr - set pins to OUTPUT
         channel
             .write(&{
                 let left = [BaseRegister::GPIO as u8, GPIOFunctionRegister::DIRCLR as u8];
@@ -134,7 +134,7 @@ impl JoyFeatherwing {
             .unwrap();
         sleep(Duration::from_millis(DELAY_MS));
 
-        // pullenset
+        // pullenset - enables PULLUP/PULLDOWN depending on high/low
         channel
             .write(&{
                 let left = [
@@ -154,6 +154,7 @@ impl JoyFeatherwing {
             .unwrap();
         sleep(Duration::from_millis(DELAY_MS));
 
+        // set - set pins to HIGH
         channel
             .write(&{
                 let left = [BaseRegister::GPIO as u8, GPIOFunctionRegister::SET as u8];
@@ -211,16 +212,14 @@ impl JoyFeatherwing {
         _ = JoyFeatherwing::pullup_pins().unwrap();
 
         // set GPIO interrupts
-        _ = JoyFeatherwing::set_GPIO_interupts().unwrap();
+        //_ = JoyFeatherwing::set_GPIO_interupts().unwrap();
     }
 
     pub fn get_joy_buttons() -> Result<Button, InputError> {
-        // digital read on button GPIO pins
-
         let mut channel = I2c::new().unwrap();
         channel.set_slave_address(JOY_I2C_ADDR);
 
-        // prepare read
+        // digital read on button GPIO pins
         channel
             .write(&[BaseRegister::GPIO as u8, GPIOFunctionRegister::GPIO as u8])
             .unwrap();
