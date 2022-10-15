@@ -19,7 +19,7 @@ pub enum Button {
 // note: arduino must be read from in 32 byte chunks
 
 static JOY_I2C_ADDR: u16 = 0x49;
-static DELAY_MS: u64 = 10;
+static DELAY_MS: u64 = 200;
 
 enum JoyInternalGPIOPins {
     ButtonRight = 0x06,
