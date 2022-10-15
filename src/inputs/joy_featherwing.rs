@@ -233,19 +233,20 @@ impl JoyFeatherwing {
         let buf32 = u8s_to_u32(&buf)[0];
 
         let res = JOY_BUTTON_PIN_BITMASK[0] & buf32;
+
+        println!(
+            "Input:   {:#034b}\n
+             Bitmask: {:#034b}",
+            res, JOY_BUTTON_PIN_BITMASK[0]
+        );
+
         Ok(match res {
             x if (x & (1 << JoyInternalGPIOPins::ButtonDown as u8)) != 0 => Button::Down,
             x if (x & (1 << JoyInternalGPIOPins::ButtonLeft as u8)) != 0 => Button::Left,
             x if (x & (1 << JoyInternalGPIOPins::ButtonRight as u8)) != 0 => Button::Right,
             x if (x & (1 << JoyInternalGPIOPins::ButtonUp as u8)) != 0 => Button::Up,
             x if (x & (1 << JoyInternalGPIOPins::ButtonSelect as u8)) != 0 => Button::Select,
-            _ => {
-                println!(
-                    "Unknown input: {:#034b}\nBitmask:       {:#034b}",
-                    res, JOY_BUTTON_PIN_BITMASK[0]
-                );
-                Button::None
-            }
+            _ => Button::None,
         })
     }
 }
