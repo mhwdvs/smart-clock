@@ -100,14 +100,14 @@ impl JoyFeatherwing {
             x if x == HardwareID::SAMD09 as u8 => return Ok(HardwareID::SAMD09),
             x if x == HardwareID::TINY8X7 as u8 => return Ok(HardwareID::TINY8X7),
             _ => return Err(InputError::JoyReadErr),
-        };
+        }
     }
 
     pub fn init() {
         // clean registers
         JoyFeatherwing::software_reset();
 
-        _ = JoyFeatherwing::hardware_id().unwrap();
+        println!("HWID: {}", JoyFeatherwing::hardware_id().unwrap() as u8);
         // pull-up buttons with PULLENSET
 
         // set GPIO interrupts
