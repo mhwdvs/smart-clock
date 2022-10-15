@@ -13,8 +13,9 @@ pub enum Button {
 }
 
 // data sheet: https://cdn-learn.adafruit.com/downloads/pdf/adafruit-seesaw-atsamd09-breakout.pdf
+// note: arduino must be read from in 32 byte chunks
 
-static JOY_I2C_ADDR: u8 = 0x49;
+static JOY_I2C_ADDR: u16 = 0x49;
 static DELAY_MS: u64 = 10;
 
 enum JoyInternalGPIOPins {
@@ -52,31 +53,60 @@ enum GPIOFunctionRegister {
     PULLENCLR = 0x0C,
 }
 
+enum HardwareID {
+    SAMD09 = 0x55,
+    TINY8X7 = 0x87,
+}
+
 pub struct JoyFeatherwing {}
 
 impl JoyFeatherwing {
-    pub fn seesaw_get_version() {
+    /// Resets all seesaw registers to their default values
+    fn software_reset() {
         let mut channel = I2c::new().unwrap();
         channel.set_slave_address(JOY_I2C_ADDR);
 
         channel
             .write(&[
                 BaseRegister::STATUS as u8,
-                StatusFunctionRegister::VERSION as u8,
+                StatusFunctionRegister::SWRST as u8,
+            ])
+            .unwrap();
+
+        sleep(Duration::from_millis(DELAY_MS));
+    }
+
+    /// Determines the seesaw's chipset
+    fn hardware_id() -> Result<HardwareID, InputError> {
+        let mut channel = I2c::new().unwrap();
+        channel.set_slave_address(JOY_I2C_ADDR);
+
+        channel
+            .write(&[
+                BaseRegister::STATUS as u8,
+                StatusFunctionRegister::HWID as u8,
             ])
             .unwrap();
 
         sleep(Duration::from_millis(DELAY_MS));
 
-        let mut buf: [u8; 4] = Default::default();
-        channel.read(&mut buf).unwrap();
-        for i in buf {
-            print!("{} ", i);
+        let mut buf: [u8; 1] = [0x0];
+        let result_num = channel.read(buf).unwrap();
+        if result_num != 4 {
+            return Err(InputError::JoyReadErr);
         }
-        print!("\n");
+
+        match buf[0] {
+            x if x == HardwareID::SAMD09 as u8 => return Ok(HardwareID::SAMD09),
+            x if x == HardwareID::TINY8X7 as u8 => return Ok(HardwareID::TINY8X7),
+            _ => return Err(InputError::JoyReadErr),
+        };
     }
 
     pub fn init() {
+        // clean registers
+        JoyFeatherwing::software_reset();
+
         // pull-up buttons with PULLENSET
 
         // set GPIO interrupts
