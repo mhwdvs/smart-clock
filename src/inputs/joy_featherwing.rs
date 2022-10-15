@@ -241,7 +241,7 @@ impl JoyFeatherwing {
         if result_num != 4 {
             return Err(InputError::JoyReadErr);
         }
-        let buf32 = u8s_to_u32(buf);
+        let buf32 = u8s_to_u32(&buf)[0];
 
         let res = JOY_BUTTON_PIN_BITMASK[0] & buf32;
         Ok(match res {
