@@ -92,7 +92,7 @@ impl JoyFeatherwing {
 
         let mut buf: [u8; 1] = [0x0];
         let result_num = channel.read(&mut buf).unwrap();
-        if result_num != 4 {
+        if result_num != 1 {
             return Err(InputError::JoyReadErr);
         }
 
@@ -107,6 +107,7 @@ impl JoyFeatherwing {
         // clean registers
         JoyFeatherwing::software_reset();
 
+        _ = JoyFeatherwing::hardware_id().unwrap();
         // pull-up buttons with PULLENSET
 
         // set GPIO interrupts
