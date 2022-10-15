@@ -7,6 +7,7 @@ use std::sync::Arc;
 use std::sync::Mutex;
 
 use inputs::bh1750::BH1750;
+use inputs::joy_featherwing::Button;
 use inputs::joy_featherwing::JoyFeatherwing;
 use matrix::Matrix;
 use state::State;
@@ -48,4 +49,15 @@ pub fn main() {
     //    matrix = matrix.post_draw();
     //}
     JoyFeatherwing::init();
+
+    loop {
+        let button = JoyFeatherwing::get_joy_buttons().unwrap();
+        match button {
+            Button::Down => println!("Down"),
+            Button::Left => println!("Left"),
+            Button::Right => println!("Right"),
+            Button::Up => println!("Up"),
+            _ => {}
+        }
+    }
 }
