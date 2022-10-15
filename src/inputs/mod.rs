@@ -10,14 +10,10 @@ pub enum InputError {
     HwNotFound,
 }
 
-pub fn u32_to_u8s(input: u32) -> [u8; 4] {
-    let res: [u8; 4] = [
-        (input >> 24) as u8,
-        (input >> 16) as u8,
-        (input >> 8) as u8,
-        input as u8,
-    ];
-    return res;
+fn u32_to_u8s(arr: &[u32]) -> &[u8] {
+    let len = 4 * arr.len();
+    let ptr = arr.as_ptr() as *const u8;
+    unsafe { std::slice::from_raw_parts(ptr, len) }
 }
 
 pub fn u8s_to_u32(input: [u8; 4]) -> u32 {

@@ -120,7 +120,7 @@ impl JoyFeatherwing {
         channel
             .write(&{
                 let left = [BaseRegister::GPIO as u8, GPIOFunctionRegister::DIRCLR as u8];
-                let right = u32_to_u8s(JOY_BUTTON_PIN_BITMASK);
+                let right = u32_to_u8s(&[JOY_BUTTON_PIN_BITMASK]);
                 let whole: [u8; 6] = {
                     let mut whole: [u8; 6] = [0; 6];
                     let (one, two) = whole.split_at_mut(left.len());
@@ -140,7 +140,7 @@ impl JoyFeatherwing {
                     BaseRegister::GPIO as u8,
                     GPIOFunctionRegister::PULLENSET as u8,
                 ];
-                let right = u32_to_u8s(JOY_BUTTON_PIN_BITMASK);
+                let right = u32_to_u8s(&[JOY_BUTTON_PIN_BITMASK]);
                 let whole: [u8; 6] = {
                     let mut whole: [u8; 6] = [0; 6];
                     let (one, two) = whole.split_at_mut(left.len());
@@ -156,7 +156,7 @@ impl JoyFeatherwing {
         channel
             .write(&{
                 let left = [BaseRegister::GPIO as u8, GPIOFunctionRegister::SET as u8];
-                let right = u32_to_u8s(JOY_BUTTON_PIN_BITMASK);
+                let right = u32_to_u8s(&[JOY_BUTTON_PIN_BITMASK]);
                 let whole: [u8; 6] = {
                     let mut whole: [u8; 6] = [0; 6];
                     let (one, two) = whole.split_at_mut(left.len());
@@ -183,7 +183,7 @@ impl JoyFeatherwing {
                     BaseRegister::GPIO as u8,
                     GPIOFunctionRegister::INTENSET as u8,
                 ];
-                let right = u32_to_u8s(JOY_BUTTON_PIN_BITMASK);
+                let right = u32_to_u8s(&[JOY_BUTTON_PIN_BITMASK]);
                 let whole: [u8; 6] = {
                     let mut whole: [u8; 6] = [0; 6];
                     let (one, two) = whole.split_at_mut(left.len());
@@ -223,7 +223,7 @@ impl JoyFeatherwing {
         channel
             .write(&{
                 let left = [BaseRegister::GPIO as u8, GPIOFunctionRegister::GPIO as u8];
-                let right = u32_to_u8s(JOY_BUTTON_PIN_BITMASK);
+                let right = u32_to_u8s(&[JOY_BUTTON_PIN_BITMASK]);
                 let whole: [u8; 6] = {
                     let mut whole: [u8; 6] = [0; 6];
                     let (one, two) = whole.split_at_mut(left.len());
