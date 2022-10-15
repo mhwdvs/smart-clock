@@ -234,11 +234,11 @@ impl JoyFeatherwing {
 
         let res = JOY_BUTTON_PIN_BITMASK[0] & buf32;
         Ok(match res {
-            x if !(x & (1 << Button::Down as u8)) != 0 => Button::Down,
-            x if !(x & (1 << Button::Left as u8)) != 0 => Button::Left,
-            x if !(x & (1 << Button::Right as u8)) != 0 => Button::Right,
-            x if !(x & (1 << Button::Up as u8)) != 0 => Button::Up,
-            x if !(x & (1 << Button::Select as u8)) != 0 => Button::Select,
+            x if (x & (1 << Button::Down as u8)) != 0 => Button::Down,
+            x if (x & (1 << Button::Left as u8)) != 0 => Button::Left,
+            x if (x & (1 << Button::Right as u8)) != 0 => Button::Right,
+            x if (x & (1 << Button::Up as u8)) != 0 => Button::Up,
+            x if (x & (1 << Button::Select as u8)) != 0 => Button::Select,
             _ => {
                 println!(
                     "Unknown input: {:#034b}\nBitmask:       {:#034b}",
