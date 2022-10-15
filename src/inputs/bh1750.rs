@@ -37,7 +37,7 @@ impl BH1750 {
         let mut channel = I2c::new().unwrap();
         channel.set_slave_address(BH1750_ADDR);
 
-        channel.write(&[OpCode::QualityHigh2]).unwrap();
+        channel.write(&[OpCode::QualityHigh2 as u8]).unwrap();
         sleep(Duration::from_millis(MEASUREMENT_DELAY_MS));
 
         // blank, brightness reading
