@@ -3,6 +3,9 @@ use rppal::i2c::I2c;
 use std::thread::sleep;
 use std::time::Duration;
 
+use crate::inputs::u32_to_u8s;
+use crate::inputs::u8s_to_u32;
+
 pub enum Button {
     None,
     Up,
@@ -26,7 +29,7 @@ enum JoyInternalGPIOPins {
     ButtonSelect = 0x14,
 }
 
-static JOY_BUTTON_PIN_BITMASK: u8 = (1 << JoyInternalGPIOPins::ButtonRight as u8)
+static JOY_BUTTON_PIN_BITMASK: u32 = (1 << JoyInternalGPIOPins::ButtonRight as u8)
     | (1 << JoyInternalGPIOPins::ButtonDown as u8)
     | (1 << JoyInternalGPIOPins::ButtonLeft as u8)
     | (1 << JoyInternalGPIOPins::ButtonUp as u8)
@@ -115,30 +118,54 @@ impl JoyFeatherwing {
 
         // dirclr
         channel
-            .write(&[
-                BaseRegister::GPIO as u8,
-                GPIOFunctionRegister::DIRCLR as u8,
-                JOY_BUTTON_PIN_BITMASK,
-            ])
+            .write({
+                let left = &[BaseRegister::GPIO as u8, GPIOFunctionRegister::DIRCLR as u8];
+                let right = &u32_to_u8s(JOY_BUTTON_PIN_BITMASK);
+                let whole: [u8; 6] = {
+                    let mut whole: [u8; 6] = [0; 6];
+                    let (one, two) = whole.split_at_mut(left.len());
+                    one.copy_from_slice(left);
+                    two.copy_from_slice(right);
+                    whole
+                };
+                whole
+            })
             .unwrap();
         sleep(Duration::from_millis(DELAY_MS));
 
         // pullenset
         channel
-            .write(&[
-                BaseRegister::GPIO as u8,
-                GPIOFunctionRegister::PULLENSET as u8,
-                JOY_BUTTON_PIN_BITMASK,
-            ])
+            .write({
+                let left = &[
+                    BaseRegister::GPIO as u8,
+                    GPIOFunctionRegister::PULLENSET as u8,
+                ];
+                let right = &u32_to_u8s(JOY_BUTTON_PIN_BITMASK);
+                let whole: [u8; 6] = {
+                    let mut whole: [u8; 6] = [0; 6];
+                    let (one, two) = whole.split_at_mut(left.len());
+                    one.copy_from_slice(left);
+                    two.copy_from_slice(right);
+                    whole
+                };
+                whole
+            })
             .unwrap();
         sleep(Duration::from_millis(DELAY_MS));
 
         channel
-            .write(&[
-                BaseRegister::GPIO as u8,
-                GPIOFunctionRegister::SET as u8,
-                JOY_BUTTON_PIN_BITMASK,
-            ])
+            .write({
+                let left = &[BaseRegister::GPIO as u8, GPIOFunctionRegister::SET as u8];
+                let right = &u32_to_u8s(JOY_BUTTON_PIN_BITMASK);
+                let whole: [u8; 6] = {
+                    let mut whole: [u8; 6] = [0; 6];
+                    let (one, two) = whole.split_at_mut(left.len());
+                    one.copy_from_slice(left);
+                    two.copy_from_slice(right);
+                    whole
+                };
+                whole
+            })
             .unwrap();
         sleep(Duration::from_millis(DELAY_MS));
 
@@ -151,11 +178,21 @@ impl JoyFeatherwing {
 
         // intenset
         channel
-            .write(&[
-                BaseRegister::GPIO as u8,
-                GPIOFunctionRegister::INTENSET as u8,
-                JOY_BUTTON_PIN_BITMASK,
-            ])
+            .write({
+                let left = &[
+                    BaseRegister::GPIO as u8,
+                    GPIOFunctionRegister::INTENSET as u8,
+                ];
+                let right = &u32_to_u8s(JOY_BUTTON_PIN_BITMASK);
+                let whole: [u8; 6] = {
+                    let mut whole: [u8; 6] = [0; 6];
+                    let (one, two) = whole.split_at_mut(left.len());
+                    one.copy_from_slice(left);
+                    two.copy_from_slice(right);
+                    whole
+                };
+                whole
+            })
             .unwrap();
         sleep(Duration::from_millis(DELAY_MS));
 
@@ -184,21 +221,29 @@ impl JoyFeatherwing {
 
         // intenset
         channel
-            .write(&[
-                BaseRegister::GPIO as u8,
-                GPIOFunctionRegister::GPIO as u8,
-                JOY_BUTTON_PIN_BITMASK,
-            ])
+            .write({
+                let left = &[BaseRegister::GPIO as u8, GPIOFunctionRegister::GPIO as u8];
+                let right = &u32_to_u8s(JOY_BUTTON_PIN_BITMASK);
+                let whole: [u8; 6] = {
+                    let mut whole: [u8; 6] = [0; 6];
+                    let (one, two) = whole.split_at_mut(left.len());
+                    one.copy_from_slice(left);
+                    two.copy_from_slice(right);
+                    whole
+                };
+                whole
+            })
             .unwrap();
         sleep(Duration::from_millis(DELAY_MS));
 
-        let mut buf: [u8; 1] = [0x0];
+        let mut buf: [u8; 4] = [0x0; 4];
         let result_num = channel.read(&mut buf).unwrap();
-        if result_num != 1 {
+        if result_num != 4 {
             return Err(InputError::JoyReadErr);
         }
+        let buf32 = u8s_to_u32(buf);
 
-        let res = JOY_BUTTON_PIN_BITMASK & buf[0];
+        let res = JOY_BUTTON_PIN_BITMASK & buf32;
         Ok(match res {
             x if (x & (1 << Button::Down as u8)) != 0 => Button::Down,
             x if (x & (1 << Button::Left as u8)) != 0 => Button::Left,
