@@ -29,11 +29,11 @@ enum JoyInternalGPIOPins {
     ButtonSelect = 0x14,
 }
 
-static JOY_BUTTON_PIN_BITMASK: u32 = (1 << JoyInternalGPIOPins::ButtonRight as u8)
+static JOY_BUTTON_PIN_BITMASK: [u32; 1] = [(1 << JoyInternalGPIOPins::ButtonRight as u8)
     | (1 << JoyInternalGPIOPins::ButtonDown as u8)
     | (1 << JoyInternalGPIOPins::ButtonLeft as u8)
     | (1 << JoyInternalGPIOPins::ButtonUp as u8)
-    | (1 << JoyInternalGPIOPins::ButtonSelect as u8);
+    | (1 << JoyInternalGPIOPins::ButtonSelect as u8)];
 
 enum BaseRegister {
     STATUS = 0x00,
@@ -120,7 +120,7 @@ impl JoyFeatherwing {
         channel
             .write(&{
                 let left = [BaseRegister::GPIO as u8, GPIOFunctionRegister::DIRCLR as u8];
-                let right = u32_to_u8s(&[JOY_BUTTON_PIN_BITMASK]);
+                let right = u32_to_u8s(&JOY_BUTTON_PIN_BITMASK);
                 let whole: [u8; 6] = {
                     let mut whole: [u8; 6] = [0; 6];
                     let (one, two) = whole.split_at_mut(left.len());
@@ -140,7 +140,7 @@ impl JoyFeatherwing {
                     BaseRegister::GPIO as u8,
                     GPIOFunctionRegister::PULLENSET as u8,
                 ];
-                let right = u32_to_u8s(&[JOY_BUTTON_PIN_BITMASK]);
+                let right = u32_to_u8s(&JOY_BUTTON_PIN_BITMASK);
                 let whole: [u8; 6] = {
                     let mut whole: [u8; 6] = [0; 6];
                     let (one, two) = whole.split_at_mut(left.len());
@@ -156,7 +156,7 @@ impl JoyFeatherwing {
         channel
             .write(&{
                 let left = [BaseRegister::GPIO as u8, GPIOFunctionRegister::SET as u8];
-                let right = u32_to_u8s(&[JOY_BUTTON_PIN_BITMASK]);
+                let right = u32_to_u8s(&JOY_BUTTON_PIN_BITMASK);
                 let whole: [u8; 6] = {
                     let mut whole: [u8; 6] = [0; 6];
                     let (one, two) = whole.split_at_mut(left.len());
@@ -183,7 +183,7 @@ impl JoyFeatherwing {
                     BaseRegister::GPIO as u8,
                     GPIOFunctionRegister::INTENSET as u8,
                 ];
-                let right = u32_to_u8s(&[JOY_BUTTON_PIN_BITMASK]);
+                let right = u32_to_u8s(&JOY_BUTTON_PIN_BITMASK);
                 let whole: [u8; 6] = {
                     let mut whole: [u8; 6] = [0; 6];
                     let (one, two) = whole.split_at_mut(left.len());
@@ -223,7 +223,7 @@ impl JoyFeatherwing {
         channel
             .write(&{
                 let left = [BaseRegister::GPIO as u8, GPIOFunctionRegister::GPIO as u8];
-                let right = u32_to_u8s(&[JOY_BUTTON_PIN_BITMASK]);
+                let right = u32_to_u8s(&JOY_BUTTON_PIN_BITMASK);
                 let whole: [u8; 6] = {
                     let mut whole: [u8; 6] = [0; 6];
                     let (one, two) = whole.split_at_mut(left.len());
@@ -243,7 +243,7 @@ impl JoyFeatherwing {
         }
         let buf32 = u8s_to_u32(buf);
 
-        let res = JOY_BUTTON_PIN_BITMASK & buf32;
+        let res = JOY_BUTTON_PIN_BITMASK[0] & buf32;
         Ok(match res {
             x if (x & (1 << Button::Down as u8)) != 0 => Button::Down,
             x if (x & (1 << Button::Left as u8)) != 0 => Button::Left,
