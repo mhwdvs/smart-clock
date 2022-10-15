@@ -219,20 +219,9 @@ impl JoyFeatherwing {
         let mut channel = I2c::new().unwrap();
         channel.set_slave_address(JOY_I2C_ADDR);
 
-        // intenset
+        // prepare read
         channel
-            .write(&{
-                let left = [BaseRegister::GPIO as u8, GPIOFunctionRegister::GPIO as u8];
-                let right = u32_to_u8s(&JOY_BUTTON_PIN_BITMASK);
-                let whole: [u8; 6] = {
-                    let mut whole: [u8; 6] = [0; 6];
-                    let (one, two) = whole.split_at_mut(left.len());
-                    one.copy_from_slice(&left);
-                    two.copy_from_slice(&right);
-                    whole
-                };
-                whole
-            })
+            .write(&[BaseRegister::GPIO as u8, GPIOFunctionRegister::GPIO as u8])
             .unwrap();
         sleep(Duration::from_millis(DELAY_MS));
 
