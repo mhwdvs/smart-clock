@@ -154,11 +154,11 @@ impl JoyFeatherwing {
             .unwrap();
         sleep(Duration::from_millis(DELAY_MS));
 
-        // xset - set pins to HIGH
-        // clr - set pins to LOW
+        // set - set pins to HIGH
+        // xclr - set pins to LOW
         channel
             .write(&{
-                let left = [BaseRegister::GPIO as u8, GPIOFunctionRegister::CLR as u8];
+                let left = [BaseRegister::GPIO as u8, GPIOFunctionRegister::SET as u8];
                 let right = u32_to_u8s(&JOY_BUTTON_PIN_BITMASK);
                 let whole: [u8; 6] = {
                     let mut whole: [u8; 6] = [0; 6];
