@@ -91,7 +91,7 @@ impl JoyFeatherwing {
         sleep(Duration::from_millis(DELAY_MS));
 
         let mut buf: [u8; 1] = [0x0];
-        let result_num = channel.read(buf).unwrap();
+        let result_num = channel.read(&mut buf).unwrap();
         if result_num != 4 {
             return Err(InputError::JoyReadErr);
         }
