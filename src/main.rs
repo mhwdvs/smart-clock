@@ -27,6 +27,11 @@ pub fn main() {
     //    BH1750::measure_brightness();
     //});
 
+    // measure button presses on seperate thread
+    std::thread::spawn(move || loop {
+        JoyFeatherwing::measure_joy_buttons();
+    });
+
     //let mut brightness_update = 0;
     //loop {
     //    if brightness_update == 10 {
@@ -51,14 +56,19 @@ pub fn main() {
     JoyFeatherwing::init();
 
     loop {
-        let button = JoyFeatherwing::get_joy_buttons().unwrap();
-        match button {
-            Button::Down => println!("Down"),
-            Button::Left => println!("Left"),
-            Button::Right => println!("Right"),
-            Button::Up => println!("Up"),
-            Button::Select => println!("Select"),
-            _ => {}
+        // clear output
+        print!("{esc}c", esc = 27 as char);
+
+        let buttons = JoyFeatherwing::get_joy_buttons();
+        for button in buttons {
+            match button {
+                Button::Down => println!("Down"),
+                Button::Left => println!("Left"),
+                Button::Right => println!("Right"),
+                Button::Up => println!("Up"),
+                Button::Select => println!("Select"),
+                _ => {}
+            }
         }
     }
 }

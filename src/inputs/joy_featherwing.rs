@@ -1,5 +1,7 @@
 use crate::inputs::InputError;
 use rppal::i2c::I2c;
+use std::sync::atomic::AtomicBool;
+use std::sync::atomic::Ordering;
 use std::thread::sleep;
 use std::time::Duration;
 
@@ -71,6 +73,12 @@ enum HardwareID {
     SAMD09 = 0x55,
     TINY8X7 = 0x87,
 }
+
+static BUTTON_A_PRESSED: AtomicBool = AtomicBool::new(false);
+static BUTTON_B_PRESSED: AtomicBool = AtomicBool::new(false);
+static BUTTON_X_PRESSED: AtomicBool = AtomicBool::new(false);
+static BUTTON_Y_PRESSED: AtomicBool = AtomicBool::new(false);
+static BUTTON_SELECT_PRESSED: AtomicBool = AtomicBool::new(false);
 
 pub struct JoyFeatherwing {}
 
@@ -229,7 +237,7 @@ impl JoyFeatherwing {
         //_ = JoyFeatherwing::set_GPIO_interupts().unwrap();
     }
 
-    pub fn get_joy_buttons() -> Result<Button, InputError> {
+    pub fn measure_joy_buttons() {
         let mut channel = I2c::new().unwrap();
         channel.set_slave_address(JOY_I2C_ADDR);
 
@@ -242,32 +250,71 @@ impl JoyFeatherwing {
         }];
 
         // digital read on button GPIO pins
-        channel
-            .write(&[BaseRegister::GPIO as u8, GPIOFunctionRegister::GPIO as u8])
-            .unwrap();
+        if let Err(r) = channel.write(&[BaseRegister::GPIO as u8, GPIOFunctionRegister::GPIO as u8])
+        {
+            return; // abort silently
+        }
         sleep(Duration::from_millis(DELAY_MS));
 
         let mut buf: [u8; 4] = [0x0; 4];
         let result_num = channel.read(&mut buf).unwrap();
         if result_num != 4 {
-            return Err(InputError::JoyReadErr);
+            return; // abort silently
         }
         let buf32 = u8s_to_u32(&buf)[0];
 
-        let res = JOY_BUTTON_PIN_BITMASK[0] & buf32;
+        let res = !(JOY_BUTTON_PIN_BITMASK[0] & buf32);
 
-        println!(
-            "Input:   {:#034b}\nBitmask: {:#034b}",
-            res, JOY_BUTTON_PIN_BITMASK[0]
-        );
+        if (res & (1u32 << JoyInternalGPIOPins::ButtonA as u32)) != 0 {
+            BUTTON_A_PRESSED.store(true, Ordering::Relaxed);
+        } else {
+            BUTTON_A_PRESSED.store(false, Ordering::Relaxed);
+        }
 
-        Ok(match !res {
-            x if (x & (1u32 << JoyInternalGPIOPins::ButtonA as u32)) != 0 => Button::Down,
-            x if (x & (1u32 << JoyInternalGPIOPins::ButtonB as u32)) != 0 => Button::Left,
-            x if (x & (1u32 << JoyInternalGPIOPins::ButtonX as u32)) != 0 => Button::Right,
-            x if (x & (1u32 << JoyInternalGPIOPins::ButtonY as u32)) != 0 => Button::Up,
-            x if (x & (1u32 << JoyInternalGPIOPins::ButtonSelect as u32)) != 0 => Button::Select,
-            _ => Button::None,
-        })
+        if (res & (1u32 << JoyInternalGPIOPins::ButtonB as u32)) != 0 {
+            BUTTON_B_PRESSED.store(true, Ordering::Relaxed);
+        } else {
+            BUTTON_B_PRESSED.store(false, Ordering::Relaxed);
+        }
+
+        if (res & (1u32 << JoyInternalGPIOPins::ButtonX as u32)) != 0 {
+            BUTTON_X_PRESSED.store(true, Ordering::Relaxed);
+        } else {
+            BUTTON_X_PRESSED.store(false, Ordering::Relaxed);
+        }
+
+        if (res & (1u32 << JoyInternalGPIOPins::ButtonY as u32)) != 0 {
+            BUTTON_Y_PRESSED.store(true, Ordering::Relaxed);
+        } else {
+            BUTTON_Y_PRESSED.store(false, Ordering::Relaxed);
+        }
+
+        if (res & (1u32 << JoyInternalGPIOPins::ButtonSelect as u32)) != 0 {
+            BUTTON_SELECT_PRESSED.store(true, Ordering::Relaxed);
+        } else {
+            BUTTON_SELECT_PRESSED.store(false, Ordering::Relaxed);
+        }
+    }
+
+    pub fn get_joy_buttons() -> Vec<Button> {
+        let buttons: Vec<Button> = Vec::new();
+
+        if BUTTON_A_PRESSED.load(Ordering::Relaxed) {
+            buttons.push(Button::Up);
+        }
+        if BUTTON_B_PRESSED.load(Ordering::Relaxed) {
+            buttons.push(Button::Down);
+        }
+        if BUTTON_X_PRESSED.load(Ordering::Relaxed) {
+            buttons.push(Button::Left);
+        }
+        if BUTTON_Y_PRESSED.load(Ordering::Relaxed) {
+            buttons.push(Button::Right);
+        }
+        if BUTTON_SELECT_PRESSED.load(Ordering::Relaxed) {
+            buttons.push(Button::Select);
+        }
+
+        buttons
     }
 }
