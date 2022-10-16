@@ -33,10 +33,10 @@ enum JoyInternalGPIOPins {
     ButtonSelect = 14,
 }
 
-static JOY_BUTTON_PIN_BITMASK: [u32; 1] = [(1 << JoyInternalGPIOPins::ButtonRight as u8)
-    | (1 << JoyInternalGPIOPins::ButtonDown as u8)
-    | (1 << JoyInternalGPIOPins::ButtonLeft as u8)
-    | (1 << JoyInternalGPIOPins::ButtonUp as u8)
+static JOY_BUTTON_PIN_BITMASK: [u32; 1] = [(1 << JoyInternalGPIOPins::ButtonA as u8)
+    | (1 << JoyInternalGPIOPins::ButtonB as u8)
+    | (1 << JoyInternalGPIOPins::ButtonX as u8)
+    | (1 << JoyInternalGPIOPins::ButtonY as u8)
     | (1 << JoyInternalGPIOPins::ButtonSelect as u8)];
 
 enum BaseRegister {
