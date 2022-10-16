@@ -260,12 +260,12 @@ impl JoyFeatherwing {
             res, JOY_BUTTON_PIN_BITMASK[0]
         );
 
-        Ok(match res {
-            x if (x & (1 << JoyInternalGPIOPins::ButtonA as u8)) != 1 => Button::Down,
-            x if (x & (1 << JoyInternalGPIOPins::ButtonB as u8)) != 1 => Button::Left,
-            x if (x & (1 << JoyInternalGPIOPins::ButtonX as u8)) != 1 => Button::Right,
-            x if (x & (1 << JoyInternalGPIOPins::ButtonY as u8)) != 1 => Button::Up,
-            x if (x & (1 << JoyInternalGPIOPins::ButtonSelect as u8)) != 1 => Button::Select,
+        Ok(match !res {
+            x if (x & (1u32 << JoyInternalGPIOPins::ButtonA as u32)) != 0 => Button::Down,
+            x if (x & (1u32 << JoyInternalGPIOPins::ButtonB as u32)) != 0 => Button::Left,
+            x if (x & (1u32 << JoyInternalGPIOPins::ButtonX as u32)) != 0 => Button::Right,
+            x if (x & (1u32 << JoyInternalGPIOPins::ButtonY as u32)) != 0 => Button::Up,
+            x if (x & (1u32 << JoyInternalGPIOPins::ButtonSelect as u32)) != 0 => Button::Select,
             _ => Button::None,
         })
     }
