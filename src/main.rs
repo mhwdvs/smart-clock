@@ -30,9 +30,9 @@ pub fn main() {
     //});
 
     // measure button presses on seperate thread
-    std::thread::spawn(move || loop {
-        JoyFeatherwing::measure_joy_buttons();
-    });
+    //std::thread::spawn(move || loop {
+    //    JoyFeatherwing::measure_joy_buttons();
+    //});
 
     //let mut brightness_update = 0;
     //loop {
@@ -57,6 +57,8 @@ pub fn main() {
     //}
 
     loop {
+        JoyFeatherwing::measure_joy_buttons();
+
         let buttons = JoyFeatherwing::get_joy_buttons();
         for button in buttons {
             match button {

@@ -21,7 +21,7 @@ pub enum Button {
 // note: arduino must be read from in 32 byte chunks
 
 static JOY_I2C_ADDR: u16 = 0x49;
-static DELAY_MS: u64 = 10;
+static DELAY_MS: u64 = 200;
 
 enum JoyInternalGPIOPins {
     /// ButtonRight = 6,
@@ -267,11 +267,11 @@ impl JoyFeatherwing {
         }
         let buf32 = u8s_to_u32(&buf)[0];
 
-        let res = !(JOY_BUTTON_PIN_BITMASK[0] & buf32);
+        let res = !(JOY_ALL_PINS_BITMASK[0] & buf32);
 
         println!(
             "Input:   {:#034b}\nBitmask: {:#034b}",
-            res, JOY_BUTTON_PIN_BITMASK[0]
+            res, JOY_ALL_PINS_BITMASK[0]
         );
 
         if (res & (1u32 << JoyInternalGPIOPins::ButtonA as u32)) != 0 {
