@@ -261,11 +261,11 @@ impl JoyFeatherwing {
         );
 
         Ok(match res {
-            x if (x & (1 << JoyInternalGPIOPins::ButtonA as u8)) != 0 => Button::Down,
-            x if (x & (1 << JoyInternalGPIOPins::ButtonB as u8)) != 0 => Button::Left,
-            x if (x & (1 << JoyInternalGPIOPins::ButtonX as u8)) != 0 => Button::Right,
-            x if (x & (1 << JoyInternalGPIOPins::ButtonY as u8)) != 0 => Button::Up,
-            x if (x & (1 << JoyInternalGPIOPins::ButtonSelect as u8)) != 0 => Button::Select,
+            x if (x & (1 << JoyInternalGPIOPins::ButtonA as u8)) != 1 => Button::Down,
+            x if (x & (1 << JoyInternalGPIOPins::ButtonB as u8)) != 1 => Button::Left,
+            x if (x & (1 << JoyInternalGPIOPins::ButtonX as u8)) != 1 => Button::Right,
+            x if (x & (1 << JoyInternalGPIOPins::ButtonY as u8)) != 1 => Button::Up,
+            x if (x & (1 << JoyInternalGPIOPins::ButtonSelect as u8)) != 1 => Button::Select,
             _ => Button::None,
         })
     }
