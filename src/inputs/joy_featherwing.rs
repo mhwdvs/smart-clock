@@ -297,7 +297,7 @@ impl JoyFeatherwing {
     }
 
     pub fn get_joy_buttons() -> Vec<Button> {
-        let buttons: Vec<Button> = Vec::new();
+        let mut buttons: Vec<Button> = Vec::new();
 
         if BUTTON_A_PRESSED.load(Ordering::Relaxed) {
             buttons.push(Button::Up);
