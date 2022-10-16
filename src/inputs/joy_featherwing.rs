@@ -273,11 +273,6 @@ impl JoyFeatherwing {
 
         let res = !(JOY_BUTTON_PIN_BITMASK[0] & buf32);
 
-        println!(
-            "Input:   {:#034b}\nBitmask: {:#034b}",
-            res, JOY_BUTTON_PIN_BITMASK[0]
-        );
-
         if (res & (1u32 << JoyInternalGPIOPins::ButtonA as u32)) != 0 {
             BUTTON_A_PRESSED.store(true, Ordering::Relaxed);
         } else {
