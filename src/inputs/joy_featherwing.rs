@@ -252,6 +252,7 @@ impl JoyFeatherwing {
         // digital read on button GPIO pins
         if let Err(r) = channel.write(&[BaseRegister::GPIO as u8, GPIOFunctionRegister::GPIO as u8])
         {
+            JoyFeatherwing::init();
             return; // abort silently
         }
         sleep(Duration::from_millis(DELAY_MS));
@@ -263,7 +264,10 @@ impl JoyFeatherwing {
                     return; // abort silently
                 }
             }
-            Err(err) => return, // abort silently
+            Err(err) => {
+                JoyFeatherwing::init();
+                return; // abort silently
+            }
         }
         let buf32 = u8s_to_u32(&buf)[0];
 
