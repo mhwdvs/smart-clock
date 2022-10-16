@@ -88,13 +88,16 @@ impl JoyFeatherwing {
         let mut channel = I2c::new().unwrap();
         channel.set_slave_address(JOY_I2C_ADDR);
 
-        channel
-            .write(&[
+        let mut written = false;
+        while !written {
+            if let Ok(result) = channel.write(&[
                 BaseRegister::STATUS as u8,
                 StatusFunctionRegister::SWRST as u8,
                 0xFF, // no idea what this is
-            ])
-            .unwrap();
+            ]) {
+                written = true;
+            }
+        }
 
         sleep(Duration::from_millis(DELAY_MS));
     }
