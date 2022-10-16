@@ -117,11 +117,19 @@ impl JoyFeatherwing {
         let mut channel = I2c::new().unwrap();
         channel.set_slave_address(JOY_I2C_ADDR);
 
+        let JOY_ALL_PINS_BITMASK: [u32; 1] = [{
+            let mut bitmask: u32 = 0;
+            for i in 0u8..32u8 {
+                bitmask |= 1 << i;
+            }
+            bitmask
+        }];
+
         // dirclr - set pins to INPUT
         channel
             .write(&{
                 let left = [BaseRegister::GPIO as u8, GPIOFunctionRegister::DIRCLR as u8];
-                let right = u32_to_u8s(&JOY_BUTTON_PIN_BITMASK);
+                let right = u32_to_u8s(&JOY_ALL_PINS_BITMASK);
                 let whole: [u8; 6] = {
                     let mut whole: [u8; 6] = [0; 6];
                     let (one, two) = whole.split_at_mut(left.len());
@@ -141,7 +149,7 @@ impl JoyFeatherwing {
                     BaseRegister::GPIO as u8,
                     GPIOFunctionRegister::PULLENSET as u8,
                 ];
-                let right = u32_to_u8s(&JOY_BUTTON_PIN_BITMASK);
+                let right = u32_to_u8s(&JOY_ALL_PINS_BITMASK);
                 let whole: [u8; 6] = {
                     let mut whole: [u8; 6] = [0; 6];
                     let (one, two) = whole.split_at_mut(left.len());
@@ -159,7 +167,7 @@ impl JoyFeatherwing {
         channel
             .write(&{
                 let left = [BaseRegister::GPIO as u8, GPIOFunctionRegister::SET as u8];
-                let right = u32_to_u8s(&JOY_BUTTON_PIN_BITMASK);
+                let right = u32_to_u8s(&JOY_ALL_PINS_BITMASK);
                 let whole: [u8; 6] = {
                     let mut whole: [u8; 6] = [0; 6];
                     let (one, two) = whole.split_at_mut(left.len());
@@ -220,6 +228,14 @@ impl JoyFeatherwing {
         let mut channel = I2c::new().unwrap();
         channel.set_slave_address(JOY_I2C_ADDR);
 
+        let JOY_ALL_PINS_BITMASK: [u32; 1] = [{
+            let mut bitmask: u32 = 0;
+            for i in 0u8..32u8 {
+                bitmask |= 1 << i;
+            }
+            bitmask
+        }];
+
         // digital read on button GPIO pins
         channel
             .write(&[BaseRegister::GPIO as u8, GPIOFunctionRegister::GPIO as u8])
@@ -233,11 +249,11 @@ impl JoyFeatherwing {
         }
         let buf32 = u8s_to_u32(&buf)[0];
 
-        let res = JOY_BUTTON_PIN_BITMASK[0] & buf32;
+        let res = JOY_ALL_PINS_BITMASK[0] & buf32;
 
         println!(
             "Input:   {:#034b}\nBitmask: {:#034b}",
-            res, JOY_BUTTON_PIN_BITMASK[0]
+            res, JOY_ALL_PINS_BITMASK[0]
         );
 
         Ok(match res {
