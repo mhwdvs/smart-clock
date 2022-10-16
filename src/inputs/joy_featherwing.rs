@@ -19,7 +19,7 @@ pub enum Button {
 // note: arduino must be read from in 32 byte chunks
 
 static JOY_I2C_ADDR: u16 = 0x49;
-static DELAY_MS: u64 = 200;
+static DELAY_MS: u64 = 10;
 
 enum JoyInternalGPIOPins {
     /// ButtonRight = 6,
@@ -261,11 +261,11 @@ impl JoyFeatherwing {
         );
 
         Ok(match res {
-            x if (x & (1 << JoyInternalGPIOPins::ButtonA as u8)) != 0 => Button::Down,
-            x if (x & (1 << JoyInternalGPIOPins::ButtonB as u8)) != 0 => Button::Left,
-            x if (x & (1 << JoyInternalGPIOPins::ButtonX as u8)) != 0 => Button::Right,
-            x if (x & (1 << JoyInternalGPIOPins::ButtonY as u8)) != 0 => Button::Up,
-            x if (x & (1 << JoyInternalGPIOPins::ButtonSelect as u8)) != 0 => Button::Select,
+            x if !(x & (1 << JoyInternalGPIOPins::ButtonA as u8)) != 0 => Button::Down,
+            x if !(x & (1 << JoyInternalGPIOPins::ButtonB as u8)) != 0 => Button::Left,
+            x if !(x & (1 << JoyInternalGPIOPins::ButtonX as u8)) != 0 => Button::Right,
+            x if !(x & (1 << JoyInternalGPIOPins::ButtonY as u8)) != 0 => Button::Up,
+            x if !(x & (1 << JoyInternalGPIOPins::ButtonSelect as u8)) != 0 => Button::Select,
             _ => Button::None,
         })
     }
