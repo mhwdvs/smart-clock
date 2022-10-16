@@ -22,10 +22,14 @@ static JOY_I2C_ADDR: u16 = 0x49;
 static DELAY_MS: u64 = 200;
 
 enum JoyInternalGPIOPins {
-    ButtonRight = 6,
-    ButtonDown = 7,
-    ButtonLeft = 9,
-    ButtonUp = 10,
+    /// ButtonRight = 6,
+    ButtonA = 30,
+    /// ButtonDown = 7,
+    ButtonB = 31,
+    /// ButtonLeft = 9,
+    ButtonY = 18,
+    /// ButtonUp = 10,
+    ButtonX = 17,
     ButtonSelect = 14,
 }
 
@@ -257,10 +261,10 @@ impl JoyFeatherwing {
         );
 
         Ok(match res {
-            x if (x & (1 << JoyInternalGPIOPins::ButtonDown as u8)) != 0 => Button::Down,
-            x if (x & (1 << JoyInternalGPIOPins::ButtonLeft as u8)) != 0 => Button::Left,
-            x if (x & (1 << JoyInternalGPIOPins::ButtonRight as u8)) != 0 => Button::Right,
-            x if (x & (1 << JoyInternalGPIOPins::ButtonUp as u8)) != 0 => Button::Up,
+            x if (x & (1 << JoyInternalGPIOPins::ButtonA as u8)) != 0 => Button::Down,
+            x if (x & (1 << JoyInternalGPIOPins::ButtonB as u8)) != 0 => Button::Left,
+            x if (x & (1 << JoyInternalGPIOPins::ButtonX as u8)) != 0 => Button::Right,
+            x if (x & (1 << JoyInternalGPIOPins::ButtonY as u8)) != 0 => Button::Up,
             x if (x & (1 << JoyInternalGPIOPins::ButtonSelect as u8)) != 0 => Button::Select,
             _ => Button::None,
         })
