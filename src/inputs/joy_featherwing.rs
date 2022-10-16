@@ -257,13 +257,22 @@ impl JoyFeatherwing {
         sleep(Duration::from_millis(DELAY_MS));
 
         let mut buf: [u8; 4] = [0x0; 4];
-        let result_num = channel.read(&mut buf).unwrap();
-        if result_num != 4 {
-            return; // abort silently
+        match channel.read(&mut buf) {
+            Ok(result_num) => {
+                if result_num != 4 {
+                    return; // abort silently
+                }
+            }
+            Err(err) => return, // abort silently
         }
         let buf32 = u8s_to_u32(&buf)[0];
 
         let res = !(JOY_BUTTON_PIN_BITMASK[0] & buf32);
+
+        println!(
+            "Input:   {:#034b}\nBitmask: {:#034b}",
+            res, JOY_BUTTON_PIN_BITMASK[0]
+        );
 
         if (res & (1u32 << JoyInternalGPIOPins::ButtonA as u32)) != 0 {
             BUTTON_A_PRESSED.store(true, Ordering::Relaxed);

@@ -57,9 +57,6 @@ pub fn main() {
     //}
 
     loop {
-        // clear output
-        print!("{esc}c", esc = 27 as char);
-
         let buttons = JoyFeatherwing::get_joy_buttons();
         for button in buttons {
             match button {
