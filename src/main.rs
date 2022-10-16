@@ -22,6 +22,8 @@ pub fn main() {
     //let mut current_state = State::RegionSelect;
     //let mut frame_count: u32 = 0;
 
+    JoyFeatherwing::init();
+
     //// measure brightness on seperate thread
     //std::thread::spawn(move || loop {
     //    BH1750::measure_brightness();
@@ -53,7 +55,6 @@ pub fn main() {
 
     //    matrix = matrix.post_draw();
     //}
-    JoyFeatherwing::init();
 
     loop {
         // clear output
