@@ -253,11 +253,11 @@ impl JoyFeatherwing {
         }
         let buf32 = u8s_to_u32(&buf)[0];
 
-        let res = JOY_ALL_PINS_BITMASK[0] & buf32;
+        let res = JOY_BUTTON_PIN_BITMASK[0] & buf32;
 
         println!(
             "Input:   {:#034b}\nBitmask: {:#034b}",
-            res, JOY_ALL_PINS_BITMASK[0]
+            res, JOY_BUTTON_PIN_BITMASK[0]
         );
 
         Ok(match res {
