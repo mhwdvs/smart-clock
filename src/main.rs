@@ -57,6 +57,7 @@ pub fn main() {
             Button::Left => println!("Left"),
             Button::Right => println!("Right"),
             Button::Up => println!("Up"),
+            Button::Select => println!("Select"),
             _ => {}
         }
     }

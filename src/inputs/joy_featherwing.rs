@@ -30,7 +30,8 @@ enum JoyInternalGPIOPins {
     ButtonY = 18,
     /// ButtonUp = 10,
     ButtonX = 17,
-    ButtonSelect = 14,
+    /// ButtonSelect = 14
+    ButtonSelect = 13,
 }
 
 static JOY_BUTTON_PIN_BITMASK: [u32; 1] = [(1 << JoyInternalGPIOPins::ButtonA as u8)
