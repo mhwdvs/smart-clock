@@ -16,6 +16,7 @@ use crate::State;
 
 static TIMEZONE_INDEX: AtomicUsize = AtomicUsize::new(0);
 static FRAME_COUNT: AtomicUsize = AtomicUsize::new(0);
+static FRAMES_SINCE_LAST_INPUT_POLL: AtomicUsize = AtomicUsize::new(0);
 
 enum RowType {
     REGULAR,
@@ -86,25 +87,33 @@ pub fn region_select_state(matrix: &mut Matrix) -> State {
 
     let current_framecount = FRAME_COUNT.load(Ordering::Acquire);
     let mut current_timezone_index = TIMEZONE_INDEX.load(Ordering::Acquire);
+    let mut current_frames_since_last_input_poll =
+        FRAMES_SINCE_LAST_INPUT_POLL.load(Ordering::Acquire);
 
-    let buttons = JoyFeatherwing::get_joy_buttons();
-    for button in buttons {
-        match button {
-            Button::Down => {
-                if current_timezone_index < TZ_VARIANTS.len() - 1 {
-                    current_timezone_index += 1;
+    let input_poll_interval: usize = 5;
+
+    if current_frames_since_last_input_poll == input_poll_interval {
+        let buttons = JoyFeatherwing::get_joy_buttons();
+        for button in buttons {
+            match button {
+                Button::Down => {
+                    if current_timezone_index < TZ_VARIANTS.len() - 1 {
+                        current_timezone_index += 1;
+                    }
                 }
-            }
-            Button::Left => println!("Left"),
-            Button::Right => println!("Right"),
-            Button::Up => {
-                if current_timezone_index != 0 {
-                    current_timezone_index -= 1
+                Button::Left => println!("Left"),
+                Button::Right => println!("Right"),
+                Button::Up => {
+                    if current_timezone_index != 0 {
+                        current_timezone_index -= 1
+                    }
                 }
+                Button::Select => println!("Select"),
+                _ => {}
             }
-            Button::Select => println!("Select"),
-            _ => {}
         }
+    } else {
+        current_frames_since_last_input_poll += 1;
     }
 
     _ = draw_menu_option(matrix, "Region:", 0, &HEADING);
@@ -169,6 +178,7 @@ pub fn region_select_state(matrix: &mut Matrix) -> State {
 
     FRAME_COUNT.store(current_framecount + 1, Ordering::Release);
     TIMEZONE_INDEX.store(current_timezone_index, Ordering::Release);
+    TIMEZONE_INDEX.store(current_frames_since_last_input_poll, Ordering::Release);
 
     return RegionSelect;
 }
