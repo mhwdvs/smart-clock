@@ -43,8 +43,6 @@ pub fn main() {
         }
         brightness_frames_since_last_update += 1;
 
-        JoyFeatherwing::measure_joy_buttons();
-
         let buttons = JoyFeatherwing::get_joy_buttons();
         for button in buttons {
             match button {
