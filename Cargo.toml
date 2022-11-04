@@ -14,5 +14,5 @@ num = "0.4.0"
 openweathermap = "0.2.4"
 
 [target.'cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))'.dependencies]
-rpi-led-matrix = "0.4.0"
+rpi-led-matrix = {path = "lib/rust-rpi-rgb-led-matrix"}
 rppal = "0.13.1"
