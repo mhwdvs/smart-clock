@@ -107,23 +107,21 @@ impl JoyFeatherwing {
         let mut channel = I2c::new().unwrap();
         channel.set_slave_address(JOY_I2C_ADDR);
 
-        let mut written = false;
-        while !written {
-            if let Ok(result) = channel.write(&[
-                BaseRegister::STATUS as u8,
-                StatusFunctionRegister::HWID as u8,
-                0xFF, // no idea what this is
-            ]) {
-                written = true;
-            }
+        match channel.write(&[
+            BaseRegister::STATUS as u8,
+            StatusFunctionRegister::HWID as u8,
+            0xFF, // no idea what this is
+        ]) {
+            Ok(x) => {}
+            Err(x) => return Err(InputError::JoyWriteErr),
         }
-
         sleep(Duration::from_millis(DELAY_MS));
 
         let mut buf: [u8; 1] = [0x0];
-        let result_num = channel.read(&mut buf).unwrap();
-        if result_num != 1 {
-            return Err(InputError::JoyReadErr);
+        match channel.read(&mut buf) {
+            Ok(1) => {}
+            Err(x) => return Err(InputError::JoyReadErr),
+            Ok(_) => return Err(InputError::JoyReadErr),
         }
 
         match buf[0] {
@@ -238,7 +236,7 @@ impl JoyFeatherwing {
         JoyFeatherwing::software_reset();
 
         // check that featherwing returns valid hardware id
-        //_ = JoyFeatherwing::hardware_id().unwrap();
+        _ = JoyFeatherwing::hardware_id().unwrap();
 
         // pull-up buttons with PULLENSET
         _ = JoyFeatherwing::pullup_pins().unwrap();
