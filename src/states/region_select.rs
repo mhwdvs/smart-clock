@@ -85,7 +85,7 @@ pub fn region_select_state(matrix: &mut Matrix) -> State {
     use State::*;
 
     let current_framecount = FRAME_COUNT.load(Ordering::Acquire);
-    let current_timezone_index = TIMEZONE_INDEX.load(Ordering::Acquire);
+    let mut current_timezone_index = TIMEZONE_INDEX.load(Ordering::Acquire);
 
     let buttons = JoyFeatherwing::get_joy_buttons();
     for button in buttons {
