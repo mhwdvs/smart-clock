@@ -112,6 +112,7 @@ pub fn region_select_state(matrix: &mut Matrix) -> State {
                 _ => {}
             }
         }
+        current_frames_since_last_input_poll = 0;
     } else {
         current_frames_since_last_input_poll += 1;
     }
