@@ -35,7 +35,6 @@ pub fn main() {
 
     loop {
         let brightness = BH1750::get_brightness();
-        println!("Brightness: {}", brightness);
         matrix.set_brightness(brightness);
 
         JoyFeatherwing::measure_joy_buttons();
