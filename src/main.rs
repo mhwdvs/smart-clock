@@ -15,48 +15,29 @@ use states::region_select::region_select_state;
 use states::time::time_state;
 
 pub fn main() {
-    //let matrix = Matrix::new(None);
-    //let buffer_matrix = Matrix::new(None);
+    let matrix = Matrix::new(None);
 
     //// initial state = RegionSelect
-    //let mut current_state = State::RegionSelect;
-    //let mut frame_count: u32 = 0;
+    let mut current_state = State::RegionSelect;
+    let mut frame_count: u32 = 0;
 
     JoyFeatherwing::init();
 
     //// measure brightness on seperate thread
-    //std::thread::spawn(move || loop {
-    //    BH1750::measure_brightness();
-    //});
+    std::thread::spawn(move || loop {
+        BH1750::measure_brightness();
+    });
 
     // measure button presses on seperate thread
-    //std::thread::spawn(move || loop {
-    //    JoyFeatherwing::measure_joy_buttons();
-    //});
-
-    //let mut brightness_update = 0;
-    //loop {
-    //    if brightness_update == 10 {
-    //        let brightness = BH1750::get_brightness();
-    //        println!("{}", brightness);
-
-    //        matrix = buffer_matrix.set_brightness(brightness);
-    //        brightness_update = 0;
-    //    } else {
-    //        brightness_update += 1;
-    //    }
-
-    //    matrix.pre_draw();
-
-    //    current_state = match current_state {
-    //        State::RegionSelect => region_select_state(&mut matrix),
-    //        State::Time => time_state(&mut matrix),
-    //    };
-
-    //    matrix = matrix.post_draw();
-    //}
+    std::thread::spawn(move || loop {
+        JoyFeatherwing::measure_joy_buttons();
+    });
 
     loop {
+        let brightness = BH1750::get_brightness();
+        println!("Brightness: {}", brightness);
+        matrix.set_brightness(brightness);
+
         JoyFeatherwing::measure_joy_buttons();
 
         let buttons = JoyFeatherwing::get_joy_buttons();
@@ -70,5 +51,14 @@ pub fn main() {
                 _ => {}
             }
         }
+
+        matrix.pre_draw();
+
+        current_state = match current_state {
+            State::RegionSelect => region_select_state(&mut matrix),
+            State::Time => time_state(&mut matrix),
+        };
+
+        matrix = matrix.post_draw();
     }
 }

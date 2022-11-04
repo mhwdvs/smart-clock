@@ -236,7 +236,7 @@ impl JoyFeatherwing {
         JoyFeatherwing::software_reset();
 
         // check that featherwing returns valid hardware id
-        _ = JoyFeatherwing::hardware_id().unwrap();
+        //_ = JoyFeatherwing::hardware_id().unwrap();
 
         // pull-up buttons with PULLENSET
         _ = JoyFeatherwing::pullup_pins().unwrap();
