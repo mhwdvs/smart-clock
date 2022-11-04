@@ -7,6 +7,7 @@ pub static DELAY_NS: usize = 100;
 pub enum InputError {
     LightReadErr,
     JoyReadErr,
+    JoyWriteErr,
     HwNotFound,
 }
 

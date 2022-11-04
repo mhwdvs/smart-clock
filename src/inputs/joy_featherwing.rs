@@ -146,58 +146,61 @@ impl JoyFeatherwing {
         }];
 
         // dirclr - set pins to INPUT
-        channel
-            .write(&{
-                let left = [BaseRegister::GPIO as u8, GPIOFunctionRegister::DIRCLR as u8];
-                let right = u32_to_u8s(&JOY_BUTTON_PIN_BITMASK);
-                let whole: [u8; 6] = {
-                    let mut whole: [u8; 6] = [0; 6];
-                    let (one, two) = whole.split_at_mut(left.len());
-                    one.copy_from_slice(&left);
-                    two.copy_from_slice(&right);
-                    whole
-                };
+        match channel.write(&{
+            let left = [BaseRegister::GPIO as u8, GPIOFunctionRegister::DIRCLR as u8];
+            let right = u32_to_u8s(&JOY_BUTTON_PIN_BITMASK);
+            let whole: [u8; 6] = {
+                let mut whole: [u8; 6] = [0; 6];
+                let (one, two) = whole.split_at_mut(left.len());
+                one.copy_from_slice(&left);
+                two.copy_from_slice(&right);
                 whole
-            })
-            .unwrap();
+            };
+            whole
+        }) {
+            Ok(x) => {}
+            Err(x) => return Err(InputError::JoyWriteErr),
+        };
         sleep(Duration::from_millis(DELAY_MS));
 
         // pullenset - enables PULLUP/PULLDOWN depending on high/low
-        channel
-            .write(&{
-                let left = [
-                    BaseRegister::GPIO as u8,
-                    GPIOFunctionRegister::PULLENSET as u8,
-                ];
-                let right = u32_to_u8s(&JOY_BUTTON_PIN_BITMASK);
-                let whole: [u8; 6] = {
-                    let mut whole: [u8; 6] = [0; 6];
-                    let (one, two) = whole.split_at_mut(left.len());
-                    one.copy_from_slice(&left);
-                    two.copy_from_slice(&right);
-                    whole
-                };
+        match channel.write(&{
+            let left = [
+                BaseRegister::GPIO as u8,
+                GPIOFunctionRegister::PULLENSET as u8,
+            ];
+            let right = u32_to_u8s(&JOY_BUTTON_PIN_BITMASK);
+            let whole: [u8; 6] = {
+                let mut whole: [u8; 6] = [0; 6];
+                let (one, two) = whole.split_at_mut(left.len());
+                one.copy_from_slice(&left);
+                two.copy_from_slice(&right);
                 whole
-            })
-            .unwrap();
+            };
+            whole
+        }) {
+            Ok(x) => {}
+            Err(x) => return Err(InputError::JoyWriteErr),
+        };
         sleep(Duration::from_millis(DELAY_MS));
 
         // set - set pins to HIGH
         // xclr - set pins to LOW
-        channel
-            .write(&{
-                let left = [BaseRegister::GPIO as u8, GPIOFunctionRegister::SET as u8];
-                let right = u32_to_u8s(&JOY_BUTTON_PIN_BITMASK);
-                let whole: [u8; 6] = {
-                    let mut whole: [u8; 6] = [0; 6];
-                    let (one, two) = whole.split_at_mut(left.len());
-                    one.copy_from_slice(&left);
-                    two.copy_from_slice(&right);
-                    whole
-                };
+        match channel.write(&{
+            let left = [BaseRegister::GPIO as u8, GPIOFunctionRegister::SET as u8];
+            let right = u32_to_u8s(&JOY_BUTTON_PIN_BITMASK);
+            let whole: [u8; 6] = {
+                let mut whole: [u8; 6] = [0; 6];
+                let (one, two) = whole.split_at_mut(left.len());
+                one.copy_from_slice(&left);
+                two.copy_from_slice(&right);
                 whole
-            })
-            .unwrap();
+            };
+            whole
+        }) {
+            Ok(x) => {}
+            Err(x) => return Err(InputError::JoyWriteErr),
+        };
         sleep(Duration::from_millis(DELAY_MS));
 
         Ok(())
@@ -235,7 +238,7 @@ impl JoyFeatherwing {
         JoyFeatherwing::software_reset();
 
         // check that featherwing returns valid hardware id
-        _ = JoyFeatherwing::hardware_id().unwrap();
+        //_ = JoyFeatherwing::hardware_id().unwrap();
 
         // pull-up buttons with PULLENSET
         _ = JoyFeatherwing::pullup_pins().unwrap();
@@ -318,10 +321,10 @@ impl JoyFeatherwing {
             buttons.push(Button::Up);
         }
         if BUTTON_B_PRESSED.load(Ordering::Relaxed) {
-            buttons.push(Button::Down);
+            buttons.push(Button::Left);
         }
         if BUTTON_X_PRESSED.load(Ordering::Relaxed) {
-            buttons.push(Button::Left);
+            buttons.push(Button::Down);
         }
         if BUTTON_Y_PRESSED.load(Ordering::Relaxed) {
             buttons.push(Button::Right);
