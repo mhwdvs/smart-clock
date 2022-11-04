@@ -115,8 +115,6 @@ pub fn region_select_state(matrix: &mut Matrix) -> State {
             }
         }
         current_frames_since_last_input_poll = 0;
-    } else {
-        current_frames_since_last_input_poll += 1;
     }
 
     _ = draw_menu_option(matrix, "Region:", 0, &HEADING);
@@ -181,7 +179,7 @@ pub fn region_select_state(matrix: &mut Matrix) -> State {
 
     FRAME_COUNT.store(current_framecount + 1, Ordering::Release);
     TIMEZONE_INDEX.store(current_timezone_index, Ordering::Release);
-    TIMEZONE_INDEX.store(current_frames_since_last_input_poll, Ordering::Release);
+    FRAMES_SINCE_LAST_INPUT_POLL.store(current_frames_since_last_input_poll + 1, Ordering::Release);
 
     return RegionSelect;
 }
