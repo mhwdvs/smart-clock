@@ -80,6 +80,19 @@ static BUTTON_X_PRESSED: AtomicBool = AtomicBool::new(false);
 static BUTTON_Y_PRESSED: AtomicBool = AtomicBool::new(false);
 static BUTTON_SELECT_PRESSED: AtomicBool = AtomicBool::new(false);
 
+/* Example usage:
+let buttons = JoyFeatherwing::get_joy_buttons();
+for button in buttons {
+    match button {
+        Button::Down => println!("Down"),
+        Button::Left => println!("Left"),
+        Button::Right => println!("Right"),
+        Button::Up => println!("Up"),
+        Button::Select => println!("Select"),
+        _ => {}
+    }
+}
+*/
 pub struct JoyFeatherwing {}
 
 impl JoyFeatherwing {

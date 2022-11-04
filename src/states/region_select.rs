@@ -9,6 +9,8 @@ use std::sync::atomic::Ordering;
 
 use chrono_tz::TZ_VARIANTS;
 
+use crate::Button;
+use crate::JoyFeatherwing;
 use crate::Matrix;
 use crate::State;
 
@@ -85,8 +87,27 @@ pub fn region_select_state(matrix: &mut Matrix) -> State {
     let current_framecount = FRAME_COUNT.load(Ordering::Acquire);
     let current_timezone_index = TIMEZONE_INDEX.load(Ordering::Acquire);
 
-    _ = draw_menu_option(matrix, "Region:", 0, &HEADING);
+    let buttons = JoyFeatherwing::get_joy_buttons();
+    for button in buttons {
+        match button {
+            Button::Down => {
+                if current_timezone_index < TZ_VARIANTS.len() - 1 {
+                    current_timezone_index += 1;
+                }
+            }
+            Button::Left => println!("Left"),
+            Button::Right => println!("Right"),
+            Button::Up => {
+                if current_timezone_index != 0 {
+                    current_timezone_index -= 1
+                }
+            }
+            Button::Select => println!("Select"),
+            _ => {}
+        }
+    }
 
+    _ = draw_menu_option(matrix, "Region:", 0, &HEADING);
     if current_timezone_index == 0 {
         _ = draw_menu_option(
             matrix,

@@ -43,18 +43,6 @@ pub fn main() {
         }
         brightness_frames_since_last_update += 1;
 
-        let buttons = JoyFeatherwing::get_joy_buttons();
-        for button in buttons {
-            match button {
-                Button::Down => println!("Down"),
-                Button::Left => println!("Left"),
-                Button::Right => println!("Right"),
-                Button::Up => println!("Up"),
-                Button::Select => println!("Select"),
-                _ => {}
-            }
-        }
-
         matrix.pre_draw();
 
         current_state = match current_state {
