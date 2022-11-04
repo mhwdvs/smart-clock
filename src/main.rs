@@ -15,7 +15,7 @@ use states::region_select::region_select_state;
 use states::time::time_state;
 
 pub fn main() {
-    let matrix = Matrix::new(None);
+    let mut matrix = Matrix::new(None);
 
     //// initial state = RegionSelect
     let mut current_state = State::RegionSelect;
