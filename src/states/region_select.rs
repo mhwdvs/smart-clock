@@ -92,6 +92,8 @@ pub fn region_select_state(matrix: &mut Matrix) -> State {
 
     let input_poll_interval: usize = 5;
 
+    println!("{}", current_frames_since_last_input_poll);
+
     if current_frames_since_last_input_poll == input_poll_interval {
         let buttons = JoyFeatherwing::get_joy_buttons();
         for button in buttons {
