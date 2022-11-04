@@ -101,7 +101,7 @@ impl Matrix {
     }
 
     #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
-    pub fn set_brightness(&mut self, brightness: u8) -> Matrix {
+    pub fn set_brightness(&mut self, brightness: u8) {
         let clamped_brightness = num::clamp(brightness, 1, 100);
         self.rpi_led_matrix.set_brightness(clamped_brightness);
     }
