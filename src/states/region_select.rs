@@ -157,7 +157,7 @@ pub fn region_select_state(matrix: &mut Matrix) -> State {
     let mut country_selected = COUNTRY_SELECTED.lock().unwrap();
     let mut city_index = CITY_INDEX.lock().unwrap();
 
-    let input_poll_interval: usize = 7;
+    let input_poll_interval: usize = 5;
 
     let current_country = get_countries()[*country_index];
     let current_city = match *country_selected {
