@@ -84,9 +84,8 @@ fn draw_menu_option(
 fn get_countries() -> Vec<&'static str> {
     let mut countries: HashSet<&str> = HashSet::new();
 
-    let mut i = 0;
-    while i < TZ_VARIANTS.len() {
-        let collection: Vec<&str> = TZ_VARIANTS[i].name().split("/").collect();
+    for tz in TZ_VARIANTS {
+        let collection: Vec<&str> = tz.name().split("/").collect();
         match collection.get(0) {
             Some(x) => {
                 countries.insert(x);
@@ -101,9 +100,8 @@ fn get_countries() -> Vec<&'static str> {
 fn get_cities(country: &str) -> Vec<&'static str> {
     let mut cities: HashSet<&str> = HashSet::new();
 
-    let mut i = 0;
-    while i < TZ_VARIANTS.len() {
-        let collection: Vec<&str> = TZ_VARIANTS[i].name().split("/").collect();
+    for tz in TZ_VARIANTS {
+        let collection: Vec<&str> = tz.name().split("/").collect();
         let a = String::from(country);
         let b = String::from(*collection.get(0).unwrap());
         if a == b {
@@ -117,9 +115,8 @@ fn get_cities(country: &str) -> Vec<&'static str> {
 }
 
 fn get_timezone(country: &str, city: &str) -> Option<chrono_tz::Tz> {
-    let mut i = 0;
-    while i < TZ_VARIANTS.len() {
-        let collection: Vec<&str> = TZ_VARIANTS[i].name().split("/").collect();
+    for tz in TZ_VARIANTS {
+        let collection: Vec<&str> = tz.name().split("/").collect();
         let a = String::from(country);
         let b = String::from(*collection.get(0).unwrap());
         if a == b {
@@ -127,7 +124,7 @@ fn get_timezone(country: &str, city: &str) -> Option<chrono_tz::Tz> {
                 let x = String::from(*collection.get(1).unwrap());
                 let y = String::from(city);
                 if x == y {
-                    return Some(TZ_VARIANTS[i]);
+                    return Some(tz);
                 }
             }
         };
