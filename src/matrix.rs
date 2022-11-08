@@ -9,9 +9,6 @@ use embedded_graphics_simulator::{
 #[cfg(all(target_arch = "arm"))]
 use rpi_led_matrix::{LedCanvas, LedMatrix, LedMatrixOptions, LedRuntimeOptions};
 
-#[cfg(all(target_arch = "arm"))]
-use std::mem::swap;
-
 pub struct Matrix {
     #[cfg(all(target_arch = "arm"))]
     rpi_led_matrix: LedMatrix,
