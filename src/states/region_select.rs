@@ -260,19 +260,19 @@ pub fn region_select_state(matrix: &mut Matrix) -> State {
         } else if *city_index == get_cities(current_country).len() - 1 {
             _ = draw_menu_option(
                 matrix,
-                get_cities(current_country)[*city_index - 2],
+                get_cities(current_country)[*city_index - 3],
                 1,
                 &REGULAR,
             );
             _ = draw_menu_option(
                 matrix,
-                get_cities(current_country)[*city_index - 1],
+                get_cities(current_country)[*city_index - 2],
                 2,
                 &REGULAR,
             );
             _ = draw_menu_option(
                 matrix,
-                get_cities(current_country)[*city_index],
+                get_cities(current_country)[*city_index - 1],
                 3,
                 &SELECTED,
             );
@@ -287,7 +287,7 @@ pub fn region_select_state(matrix: &mut Matrix) -> State {
                 matrix,
                 get_cities(current_country)[*city_index],
                 2,
-                &REGULAR,
+                &SELECTED,
             );
             _ = draw_menu_option(
                 matrix,
