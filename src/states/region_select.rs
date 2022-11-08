@@ -216,6 +216,7 @@ pub fn region_select_state(matrix: &mut Matrix) -> State {
         }
         *current_frames_since_last_input_poll = 0;
     }
+    *current_frames_since_last_input_poll += 1;
 
     // heading
     _ = draw_menu_option(matrix, "Region:", 0, &HEADING);
