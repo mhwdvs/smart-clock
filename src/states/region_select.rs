@@ -228,12 +228,12 @@ pub fn region_select_state(matrix: &mut Matrix) -> State {
             _ = draw_menu_option(matrix, get_countries()[*country_index + 1], 2, &REGULAR);
             _ = draw_menu_option(matrix, get_countries()[*country_index + 2], 3, &REGULAR);
         } else if *country_index == get_countries().len() - 1 {
-            _ = draw_menu_option(matrix, get_countries()[*country_index - 2], 1, &REGULAR);
-            _ = draw_menu_option(matrix, get_countries()[*country_index - 1], 2, &REGULAR);
-            _ = draw_menu_option(matrix, get_countries()[*country_index], 3, &SELECTED);
+            _ = draw_menu_option(matrix, get_countries()[*country_index - 3], 1, &REGULAR);
+            _ = draw_menu_option(matrix, get_countries()[*country_index - 2], 2, &REGULAR);
+            _ = draw_menu_option(matrix, get_countries()[*country_index - 1], 3, &SELECTED);
         } else {
             _ = draw_menu_option(matrix, get_countries()[*country_index - 1], 1, &REGULAR);
-            _ = draw_menu_option(matrix, get_countries()[*country_index], 2, &REGULAR);
+            _ = draw_menu_option(matrix, get_countries()[*country_index], 2, &SELECTED);
             _ = draw_menu_option(matrix, get_countries()[*country_index + 1], 3, &REGULAR);
         }
     } else {
