@@ -94,7 +94,9 @@ fn get_countries() -> Vec<&'static str> {
         };
     }
 
-    countries.into_iter().collect()
+    let mut res: Vec<&'static str> = countries.into_iter().collect();
+    res.sort();
+    res
 }
 
 fn get_cities(country: &str) -> Vec<&'static str> {
@@ -111,7 +113,9 @@ fn get_cities(country: &str) -> Vec<&'static str> {
         };
     }
 
-    cities.into_iter().collect()
+    let mut res: Vec<&'static str> = cities.into_iter().collect();
+    res.sort();
+    res
 }
 
 fn get_timezone(country: &str, city: &str) -> Option<chrono_tz::Tz> {
