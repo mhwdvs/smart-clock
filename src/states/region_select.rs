@@ -81,7 +81,7 @@ fn draw_menu_option(
 }
 
 /// country, city, TZ
-const fn get_countries() -> Vec<&'static str> {
+fn get_countries() -> Vec<&'static str> {
     let mut countries: HashSet<&str>;
 
     let mut i = 0;
@@ -98,7 +98,7 @@ const fn get_countries() -> Vec<&'static str> {
     countries.into_iter().collect()
 }
 
-const fn get_cities(country: &str) -> Vec<&'static str> {
+fn get_cities(country: &str) -> Vec<&'static str> {
     let mut cities: HashSet<&str>;
 
     let mut i = 0;
@@ -116,7 +116,7 @@ const fn get_cities(country: &str) -> Vec<&'static str> {
     cities.into_iter().collect()
 }
 
-const fn get_timezone(country: &str, city: &str) -> Option<chrono_tz::Tz> {
+fn get_timezone(country: &str, city: &str) -> Option<chrono_tz::Tz> {
     let mut i = 0;
     while i < TZ_VARIANTS.len() {
         let collection: Vec<&str> = TZ_VARIANTS[i].name().split("/").collect();
