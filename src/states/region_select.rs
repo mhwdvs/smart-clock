@@ -130,6 +130,9 @@ fn get_timezone(country: &str, city: &str) -> Option<chrono_tz::Tz> {
                 if x == y {
                     return Some(tz);
                 }
+            } else {
+                // no associated city
+                return Some(tz);
             }
         };
     }
@@ -196,6 +199,13 @@ pub fn region_select_state(matrix: &mut Matrix) -> State {
                         return State::Time;
                     } else {
                         *country_selected = true;
+                        match get_timezone(current_country, "") {
+                            Some(x) => {
+                                *CURRENT_TIMEZONE.lock().unwrap() = x;
+                                return State::Time;
+                            }
+                            None => {}
+                        };
                     }
                 }
                 Button::Up => {
