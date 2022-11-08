@@ -104,7 +104,9 @@ const fn get_cities(country: &str) -> Vec<&'static str> {
     let mut i = 0;
     while i < TZ_VARIANTS.len() {
         let collection: Vec<&str> = TZ_VARIANTS[i].name().split("/").collect();
-        if collection.get(0).unwrap() == &country {
+        let a = String::from(country);
+        let b = String::from(*collection.get(0).unwrap());
+        if a == b {
             if collection.get(1).is_some() {
                 cities.insert(collection.get(1).unwrap());
             }
@@ -118,9 +120,13 @@ const fn get_timezone(country: &str, city: &str) -> Option<chrono_tz::Tz> {
     let mut i = 0;
     while i < TZ_VARIANTS.len() {
         let collection: Vec<&str> = TZ_VARIANTS[i].name().split("/").collect();
-        if collection.get(0).unwrap() == &country {
+        let a = String::from(country);
+        let b = String::from(*collection.get(0).unwrap());
+        if a == b {
             if collection.get(1).is_some() {
-                if collection.get(1).unwrap() == &city {
+                let x = String::from(*collection.get(1).unwrap());
+                let y = String::from(city);
+                if x == y {
                     return Some(TZ_VARIANTS[i]);
                 }
             }
