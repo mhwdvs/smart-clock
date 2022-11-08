@@ -29,8 +29,8 @@ fn draw_time(matrix: &mut Matrix) {
         .timestamp(unix_epoch_time.try_into().unwrap(), 0);
 
     _ = Text::with_alignment(
-        local_time.to_string().as_str(),
-        Point::new(5, 0),
+        local_time.format("%H:%M:%S").to_string().as_str(),
+        Point::new(1, 15),
         font_red,
         Alignment::Left,
     )
