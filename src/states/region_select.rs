@@ -82,7 +82,7 @@ fn draw_menu_option(
 
 /// country, city, TZ
 fn get_countries() -> Vec<&'static str> {
-    let mut countries: HashSet<&str>;
+    let mut countries: HashSet<&str> = HashSet::new();
 
     let mut i = 0;
     while i < TZ_VARIANTS.len() {
@@ -99,7 +99,7 @@ fn get_countries() -> Vec<&'static str> {
 }
 
 fn get_cities(country: &str) -> Vec<&'static str> {
-    let mut cities: HashSet<&str>;
+    let mut cities: HashSet<&str> = HashSet::new();
 
     let mut i = 0;
     while i < TZ_VARIANTS.len() {
