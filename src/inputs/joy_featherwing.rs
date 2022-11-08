@@ -9,7 +9,6 @@ use crate::inputs::u32_to_u8s;
 use crate::inputs::u8s_to_u32;
 
 pub enum Button {
-    None,
     Up,
     Down,
     Left,
@@ -23,6 +22,7 @@ pub enum Button {
 static JOY_I2C_ADDR: u16 = 0x49;
 static DELAY_MS: u64 = 10;
 
+#[allow(dead_code)]
 enum JoyInternalGPIOPins {
     /// ButtonRight = 6,
     ButtonA = 30,
@@ -42,11 +42,13 @@ static JOY_BUTTON_PIN_BITMASK: [u32; 1] = [(1 << JoyInternalGPIOPins::ButtonA as
     | (1 << JoyInternalGPIOPins::ButtonY as u8)
     | (1 << JoyInternalGPIOPins::ButtonSelect as u8)];
 
+#[allow(dead_code)]
 enum BaseRegister {
     STATUS = 0x00,
     GPIO = 0x01,
 }
 
+#[allow(dead_code)]
 enum StatusFunctionRegister {
     HWID = 0x01,
     VERSION = 0x02,
@@ -55,6 +57,7 @@ enum StatusFunctionRegister {
     SWRST = 0x7f,
 }
 
+#[allow(dead_code)]
 enum GPIOFunctionRegister {
     DIRSET = 0x02,
     DIRCLR = 0x03,
@@ -69,6 +72,7 @@ enum GPIOFunctionRegister {
     PULLENCLR = 0x0C,
 }
 
+#[allow(dead_code)]
 enum HardwareID {
     SAMD09 = 0x55,
     TINY8X7 = 0x87,
@@ -99,7 +103,7 @@ impl JoyFeatherwing {
     /// Resets all seesaw registers to their default values
     fn software_reset() {
         let mut channel = I2c::new().unwrap();
-        channel.set_slave_address(JOY_I2C_ADDR);
+        _ = channel.set_slave_address(JOY_I2C_ADDR);
 
         let mut written = false;
         while !written {
@@ -116,9 +120,10 @@ impl JoyFeatherwing {
     }
 
     /// Determines the seesaw's chipset
+    #[allow(dead_code)]
     fn hardware_id() -> Result<HardwareID, InputError> {
         let mut channel = I2c::new().unwrap();
-        channel.set_slave_address(JOY_I2C_ADDR);
+        _ = channel.set_slave_address(JOY_I2C_ADDR);
 
         match channel.write(&[
             BaseRegister::STATUS as u8,
@@ -126,27 +131,27 @@ impl JoyFeatherwing {
             0xFF, // no idea what this is
         ]) {
             Ok(_) => {}
-            Err(_) => return Err(InputError::JoyWriteErr),
+            Err(_) => return Err(InputError::WriteErr),
         }
         sleep(Duration::from_millis(DELAY_MS));
 
         let mut buf: [u8; 1] = [0x0];
         match channel.read(&mut buf) {
             Ok(1) => {}
-            Err(_) => return Err(InputError::JoyReadErr),
-            Ok(_) => return Err(InputError::JoyReadErr),
+            Err(_) => return Err(InputError::ReadErr),
+            Ok(_) => return Err(InputError::ReadErr),
         }
 
         match buf[0] {
             x if x == HardwareID::SAMD09 as u8 => return Ok(HardwareID::SAMD09),
             x if x == HardwareID::TINY8X7 as u8 => return Ok(HardwareID::TINY8X7),
-            _ => return Err(InputError::JoyReadErr),
+            _ => return Err(InputError::ReadErr),
         }
     }
 
     fn pullup_pins() -> Result<(), InputError> {
         let mut channel = I2c::new().unwrap();
-        channel.set_slave_address(JOY_I2C_ADDR);
+        _ = channel.set_slave_address(JOY_I2C_ADDR);
 
         // dirclr - set pins to INPUT
         match channel.write(&{
@@ -162,7 +167,7 @@ impl JoyFeatherwing {
             whole
         }) {
             Ok(_) => {}
-            Err(_) => return Err(InputError::JoyWriteErr),
+            Err(_) => return Err(InputError::WriteErr),
         };
         sleep(Duration::from_millis(DELAY_MS));
 
@@ -183,7 +188,7 @@ impl JoyFeatherwing {
             whole
         }) {
             Ok(_) => {}
-            Err(_) => return Err(InputError::JoyWriteErr),
+            Err(_) => return Err(InputError::WriteErr),
         };
         sleep(Duration::from_millis(DELAY_MS));
 
@@ -202,16 +207,17 @@ impl JoyFeatherwing {
             whole
         }) {
             Ok(_) => {}
-            Err(_) => return Err(InputError::JoyWriteErr),
+            Err(_) => return Err(InputError::WriteErr),
         };
         sleep(Duration::from_millis(DELAY_MS));
 
         Ok(())
     }
 
-    fn set_GPIO_interupts() -> Result<(), InputError> {
+    #[allow(dead_code)]
+    fn set_gpio_interupts() -> Result<(), InputError> {
         let mut channel = I2c::new().unwrap();
-        channel.set_slave_address(JOY_I2C_ADDR);
+        _ = channel.set_slave_address(JOY_I2C_ADDR);
 
         // intenset
         channel
@@ -252,7 +258,7 @@ impl JoyFeatherwing {
 
     pub fn measure_joy_buttons() {
         let mut channel = I2c::new().unwrap();
-        channel.set_slave_address(JOY_I2C_ADDR);
+        _ = channel.set_slave_address(JOY_I2C_ADDR);
 
         // digital read on button GPIO pins
         if let Err(_) = channel.write(&[BaseRegister::GPIO as u8, GPIOFunctionRegister::GPIO as u8])

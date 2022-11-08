@@ -24,7 +24,7 @@ pub fn main() {
 
     //// measure brightness on seperate thread
     std::thread::spawn(move || loop {
-        BH1750::measure_brightness();
+        _ = BH1750::measure_brightness();
     });
 
     // measure button presses on seperate thread
