@@ -156,7 +156,10 @@ pub fn region_select_state(matrix: &mut Matrix) -> State {
     let input_poll_interval: usize = 7;
 
     let current_country = get_countries()[*country_index];
-    let current_city = get_cities(current_country)[*city_index];
+    let current_city = match *country_selected {
+        true => get_cities(current_country)[*city_index],
+        false => "",
+    };
 
     if *current_frames_since_last_input_poll == input_poll_interval {
         let buttons = JoyFeatherwing::get_joy_buttons();
