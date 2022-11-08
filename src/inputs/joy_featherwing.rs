@@ -103,7 +103,7 @@ impl JoyFeatherwing {
 
         let mut written = false;
         while !written {
-            if let Ok(result) = channel.write(&[
+            if let Ok(_) = channel.write(&[
                 BaseRegister::STATUS as u8,
                 StatusFunctionRegister::SWRST as u8,
                 0xFF, // no idea what this is
@@ -125,15 +125,15 @@ impl JoyFeatherwing {
             StatusFunctionRegister::HWID as u8,
             0xFF, // no idea what this is
         ]) {
-            Ok(x) => {}
-            Err(x) => return Err(InputError::JoyWriteErr),
+            Ok(_) => {}
+            Err(_) => return Err(InputError::JoyWriteErr),
         }
         sleep(Duration::from_millis(DELAY_MS));
 
         let mut buf: [u8; 1] = [0x0];
         match channel.read(&mut buf) {
             Ok(1) => {}
-            Err(x) => return Err(InputError::JoyReadErr),
+            Err(_) => return Err(InputError::JoyReadErr),
             Ok(_) => return Err(InputError::JoyReadErr),
         }
 
@@ -148,14 +148,6 @@ impl JoyFeatherwing {
         let mut channel = I2c::new().unwrap();
         channel.set_slave_address(JOY_I2C_ADDR);
 
-        let JOY_ALL_PINS_BITMASK: [u32; 1] = [{
-            let mut bitmask: u32 = 0;
-            for i in 0u8..32u8 {
-                bitmask |= 1 << i;
-            }
-            bitmask
-        }];
-
         // dirclr - set pins to INPUT
         match channel.write(&{
             let left = [BaseRegister::GPIO as u8, GPIOFunctionRegister::DIRCLR as u8];
@@ -169,8 +161,8 @@ impl JoyFeatherwing {
             };
             whole
         }) {
-            Ok(x) => {}
-            Err(x) => return Err(InputError::JoyWriteErr),
+            Ok(_) => {}
+            Err(_) => return Err(InputError::JoyWriteErr),
         };
         sleep(Duration::from_millis(DELAY_MS));
 
@@ -190,8 +182,8 @@ impl JoyFeatherwing {
             };
             whole
         }) {
-            Ok(x) => {}
-            Err(x) => return Err(InputError::JoyWriteErr),
+            Ok(_) => {}
+            Err(_) => return Err(InputError::JoyWriteErr),
         };
         sleep(Duration::from_millis(DELAY_MS));
 
@@ -209,8 +201,8 @@ impl JoyFeatherwing {
             };
             whole
         }) {
-            Ok(x) => {}
-            Err(x) => return Err(InputError::JoyWriteErr),
+            Ok(_) => {}
+            Err(_) => return Err(InputError::JoyWriteErr),
         };
         sleep(Duration::from_millis(DELAY_MS));
 
@@ -262,16 +254,8 @@ impl JoyFeatherwing {
         let mut channel = I2c::new().unwrap();
         channel.set_slave_address(JOY_I2C_ADDR);
 
-        let JOY_ALL_PINS_BITMASK: [u32; 1] = [{
-            let mut bitmask: u32 = 0;
-            for i in 0u8..32u8 {
-                bitmask |= 1 << i;
-            }
-            bitmask
-        }];
-
         // digital read on button GPIO pins
-        if let Err(r) = channel.write(&[BaseRegister::GPIO as u8, GPIOFunctionRegister::GPIO as u8])
+        if let Err(_) = channel.write(&[BaseRegister::GPIO as u8, GPIOFunctionRegister::GPIO as u8])
         {
             JoyFeatherwing::init();
             return; // abort silently
@@ -285,7 +269,7 @@ impl JoyFeatherwing {
                     return; // abort silently
                 }
             }
-            Err(err) => {
+            Err(_) => {
                 JoyFeatherwing::init();
                 return; // abort silently
             }
