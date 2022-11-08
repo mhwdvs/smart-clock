@@ -158,16 +158,6 @@ pub fn region_select_state(matrix: &mut Matrix) -> State {
 
     let input_poll_interval: usize = 7;
 
-    let filtered = TZ_VARIANTS
-        .iter()
-        .filter(|&x| {
-            x.to_string().split('/');
-            true
-        })
-        .collect::<Vec<&chrono_tz::Tz>>();
-
-    for asd in filtered {}
-
     let current_country = get_countries()[*country_index];
     let current_city = get_cities(current_country)[*city_index];
 
@@ -225,9 +215,6 @@ pub fn region_select_state(matrix: &mut Matrix) -> State {
 
     // heading
     _ = draw_menu_option(matrix, "Region:", 0, &HEADING);
-
-    // options
-    for country in get_countries().iter() {}
 
     if !*country_selected {
         // provide country options
