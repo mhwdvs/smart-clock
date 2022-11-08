@@ -3,9 +3,6 @@ mod matrix;
 mod state;
 mod states;
 
-use std::sync::Arc;
-use std::sync::Mutex;
-
 use inputs::bh1750::BH1750;
 use inputs::joy_featherwing::Button;
 use inputs::joy_featherwing::JoyFeatherwing;
