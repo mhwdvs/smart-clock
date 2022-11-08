@@ -2,6 +2,7 @@ pub mod bh1750;
 pub mod joy_featherwing;
 
 #[derive(Debug)]
+#[allow(dead_code)]
 pub enum InputError {
     ReadErr,
     WriteErr,
