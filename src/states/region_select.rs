@@ -172,12 +172,12 @@ pub fn region_select_state(matrix: &mut Matrix) -> State {
                 Button::Down => {
                     if *country_selected {
                         // test for city down
-                        if *city_index < get_cities(current_country).len() {
+                        if *city_index < get_cities(current_country).len() - 1 {
                             *city_index += 1;
                         }
                     } else {
                         // test for country down
-                        if *country_index < get_countries().len() {
+                        if *country_index < get_countries().len() - 1 {
                             *country_index += 1;
                         }
                     }
