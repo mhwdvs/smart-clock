@@ -62,7 +62,7 @@ fn draw_temperature(matrix: &mut Matrix) {
 
     _ = Text::with_alignment(
         CURRENT_TEMPERATURE.lock().unwrap().to_string().as_str(),
-        Point::new(1, 7),
+        Point::new(1, 17),
         font_red,
         Alignment::Left,
     )
