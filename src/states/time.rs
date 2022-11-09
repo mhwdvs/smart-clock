@@ -23,7 +23,7 @@ lazy_static! {
 
         let current_weather = weather(
             current_city,
-            "metrix",
+            "metric",
             "en",
             "8f05f2ea5cefe45e3d51e3df919359a6",
         );
@@ -71,6 +71,7 @@ fn draw_temperature(matrix: &mut Matrix) {
 
 pub fn time_state(matrix: &mut Matrix) -> State {
     draw_time(matrix);
+    draw_temperature(matrix);
 
     return Time;
 }
