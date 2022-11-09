@@ -2,13 +2,10 @@ use std::collections::HashSet;
 use std::num::IntErrorKind;
 use std::sync::Mutex;
 
-use chrono_tz::Tz;
 use embedded_graphics::{
     geometry::Point, mono_font::ascii::*, mono_font::*, pixelcolor::Rgb888, text::Alignment,
     text::Text, Drawable,
 };
-
-use std::collections::BTreeMap;
 
 use chrono_tz::TZ_VARIANTS;
 
