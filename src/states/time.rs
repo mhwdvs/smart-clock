@@ -15,7 +15,7 @@ use super::CURRENT_TIMEZONE;
 
 fn draw_time(matrix: &mut Matrix) {
     let font_red: MonoTextStyle<Rgb888> =
-        MonoTextStyle::new(&FONT_8X13, Rgb888::new(0xff, 0x0, 0x0));
+        MonoTextStyle::new(&FONT_7X13_BOLD, Rgb888::new(0xff, 0x0, 0x0));
 
     // get current UNIX Epoch time
 
