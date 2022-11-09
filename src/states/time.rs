@@ -34,7 +34,7 @@ lazy_static! {
 
 fn draw_time(matrix: &mut Matrix) {
     let font_red: MonoTextStyle<Rgb888> =
-        MonoTextStyle::new(&FONT_4X6, Rgb888::new(0xff, 0x0, 0x0));
+        MonoTextStyle::new(&FONT_7X13, Rgb888::new(0xff, 0x0, 0x0));
 
     // get current UNIX Epoch time
 
@@ -58,7 +58,7 @@ fn draw_time(matrix: &mut Matrix) {
 
 fn draw_temperature(matrix: &mut Matrix) {
     let font_red: MonoTextStyle<Rgb888> =
-        MonoTextStyle::new(&FONT_7X13, Rgb888::new(0xff, 0x0, 0x0));
+        MonoTextStyle::new(&FONT_4X6, Rgb888::new(0xff, 0x0, 0x0));
 
     _ = Text::with_alignment(
         CURRENT_TEMPERATURE.lock().unwrap().to_string().as_str(),
