@@ -1,0 +1,3 @@
+[submodule "lib/rust-rpi-rgb-led-matrix"]
+	path = lib/rust-rpi-rgb-led-matrix
+	url = https://github.com/mhwdvs/rust-rpi-rgb-led-matrix

@@ -1,20 +1,48 @@
+#[macro_use]
+extern crate lazy_static;
+
+mod inputs;
 mod matrix;
 mod state;
 mod states;
 
+use inputs::bh1750::BH1750;
+use inputs::joy_featherwing::Button;
+use inputs::joy_featherwing::JoyFeatherwing;
 use matrix::Matrix;
 use state::State;
 use states::region_select::region_select_state;
 use states::time::time_state;
 
 pub fn main() {
-    let mut matrix = Matrix::new();
+    let brightness_update_interval: u8 = 10;
+    let mut brightness_frames_since_last_update: u8 = 0;
 
-    // initial state = RegionSelect
+    let mut matrix = Matrix::new(None);
+
+    //// initial state = RegionSelect
     let mut current_state = State::RegionSelect;
-    let mut frame_count: u32 = 0;
+
+    JoyFeatherwing::init();
+
+    //// measure brightness on seperate thread
+    std::thread::spawn(move || loop {
+        _ = BH1750::measure_brightness();
+    });
+
+    // measure button presses on seperate thread
+    std::thread::spawn(move || loop {
+        JoyFeatherwing::measure_joy_buttons();
+    });
 
     loop {
+        if brightness_update_interval == brightness_frames_since_last_update {
+            let brightness = BH1750::get_brightness();
+            matrix.set_brightness(brightness);
+            brightness_frames_since_last_update = 0;
+        }
+        brightness_frames_since_last_update += 1;
+
         matrix.pre_draw();
 
         current_state = match current_state {

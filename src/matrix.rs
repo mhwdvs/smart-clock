@@ -9,9 +9,6 @@ use embedded_graphics_simulator::{
 #[cfg(all(target_arch = "arm"))]
 use rpi_led_matrix::{LedCanvas, LedMatrix, LedMatrixOptions, LedRuntimeOptions};
 
-#[cfg(all(target_arch = "arm"))]
-use std::mem::swap;
-
 pub struct Matrix {
     #[cfg(all(target_arch = "arm"))]
     rpi_led_matrix: LedMatrix,
@@ -26,18 +23,23 @@ pub struct Matrix {
 
 impl Matrix {
     #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
-    pub fn new() -> Self {
+    pub fn new(brightness: Option<u8>) -> Self {
         let mut matrix_options = LedMatrixOptions::new();
-        _ = matrix_options.set_brightness(100);
+        _ = match brightness {
+            Some(x) => matrix_options.set_brightness(x),
+            None => matrix_options.set_brightness(100),
+        };
         matrix_options.set_cols(64);
         matrix_options.set_rows(32);
         matrix_options.set_hardware_mapping("adafruit-hat-pwm");
         matrix_options.set_limit_refresh(0);
         matrix_options.set_led_rgb_sequence("rbg");
+        matrix_options.set_refresh_rate(false);
 
         let mut runtime_options = LedRuntimeOptions::new();
         //runtime_options.set_daemon(true);
         runtime_options.set_gpio_slowdown(2);
+        runtime_options.set_drop_privileges(false);
 
         let matrix = LedMatrix::new(Some(matrix_options), Some(runtime_options)).unwrap();
         let canvas = matrix.offscreen_canvas();
@@ -49,7 +51,7 @@ impl Matrix {
     }
 
     #[cfg(not(all(target_arch = "arm", target_os = "linux", target_env = "gnu")))]
-    pub fn new() -> Self {
+    pub fn new(brightness: Option<u8>) -> Self {
         let output_settings = OutputSettingsBuilder::new().scale(10).build();
 
         let sim_display: SimulatorDisplay<Rgb888> = SimulatorDisplay::new(Size::new(64, 32));
@@ -93,5 +95,11 @@ impl Matrix {
     pub fn post_draw(mut self) -> Self {
         self.sim_window.update(&self.sim_display);
         return self;
+    }
+
+    #[cfg(all(target_arch = "arm", target_os = "linux", target_env = "gnu"))]
+    pub fn set_brightness(&mut self, brightness: u8) {
+        let clamped_brightness = num::clamp(brightness, 1, 100);
+        self.rpi_led_matrix.set_brightness(clamped_brightness);
     }
 }
